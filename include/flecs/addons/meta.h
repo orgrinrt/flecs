@@ -30,7 +30,7 @@
  * (Constant, u32) to the desired value. Constants with manual values should not
  * conflict with other constants.
  * 
- * The _init APIs are convenience wrappers around creating the entities and
+ * The m_init APIs are convenience wrappers around creating the entities and
  * components for the types.
  * 
  * When a type is created it automatically receives the EcsComponent and 
@@ -99,7 +99,7 @@ typedef int64_t ecs_i64_t;
 typedef intptr_t ecs_iptr_t;
 typedef float ecs_f32_t;
 typedef double ecs_f64_t;
-typedef char* ecs_string_t;
+typedef char *ecs_string_t;
 
 /* Meta module component ids */
 FLECS_API extern const ecs_entity_t ecs_id(EcsMetaType);
@@ -151,10 +151,10 @@ typedef enum ecs_type_kind_t {
 /** Component that is automatically added to every type with the right kind. */
 typedef struct EcsMetaType {
     ecs_type_kind_t kind;
-    bool existing;         /**< Did the type exist or is it populated from reflection */
-    bool partial;          /**< Is the reflection data a partial type description */
-    ecs_size_t size;       /**< Computed size */
-    ecs_size_t alignment;  /**< Computed alignment */
+    bool existing;        /**< Did the type exist or is it populated from reflection */
+    bool partial;         /**< Is the reflection data a partial type description */
+    ecs_size_t size;      /**< Computed size */
+    ecs_size_t alignment; /**< Computed alignment */
 } EcsMetaType;
 
 typedef enum ecs_primitive_kind_t {
@@ -254,7 +254,6 @@ typedef struct EcsVector {
     ecs_entity_t type;
 } EcsVector;
 
-
 /* Opaque type support */
 
 #if !defined(__cplusplus) || !defined(FLECS_CPP)
@@ -262,15 +261,13 @@ typedef struct EcsVector {
 /** Serializer interface */
 typedef struct ecs_serializer_t {
     /* Serialize value */
-    int (*value)(
-        const struct ecs_serializer_t *ser, /**< Serializer */
-        ecs_entity_t type,            /**< Type of the value to serialize */
-        const void *value);           /**< Pointer to the value to serialize */
+    int (*value)(const struct ecs_serializer_t *ser, /**< Serializer */
+                 ecs_entity_t type,                  /**< Type of the value to serialize */
+                 const void *value);                 /**< Pointer to the value to serialize */
 
     /* Serialize member */
-    int (*member)(
-        const struct ecs_serializer_t *ser, /**< Serializer */
-        const char *member);           /**< Member name */
+    int (*member)(const struct ecs_serializer_t *ser, /**< Serializer */
+                  const char *member);                /**< Member name */
 
     const ecs_world_t *world;
     void *ctx;
@@ -283,22 +280,16 @@ typedef struct ecs_serializer_t {
 /** Serializer interface (same layout as C, but with convenience methods) */
 typedef struct ecs_serializer_t {
     /* Serialize value */
-    int (*value_)(
-        const struct ecs_serializer_t *ser,
-        ecs_entity_t type,
-        const void *value);
+    int (*value_)(const struct ecs_serializer_t *ser, ecs_entity_t type, const void *value);
 
     /* Serialize member */
-    int (*member_)(
-        const struct ecs_serializer_t *ser,
-        const char *name);
+    int (*member_)(const struct ecs_serializer_t *ser, const char *name);
 
     /* Serialize value */
     int value(ecs_entity_t type, const void *value) const;
-    
+
     /* Serialize value */
-    template <typename T>
-    int value(const T& value) const;
+    template<typename T> int value(const T &value) const;
 
     /* Serialize member */
     int member(const char *name) const;
@@ -311,13 +302,12 @@ extern "C" {
 #endif
 
 /** Callback invoked serializing an opaque type. */
-typedef int (*ecs_meta_serialize_t)(
-    const ecs_serializer_t *ser,
-    const void *src);                  /**< Pointer to value to serialize */
+typedef int (*ecs_meta_serialize_t)(const ecs_serializer_t *ser,
+                                    const void *src); /**< Pointer to value to serialize */
 
 typedef struct EcsOpaque {
-    ecs_entity_t as_type;              /**< Type that describes the serialized output */
-    ecs_meta_serialize_t serialize;    /**< Serialize action */
+    ecs_entity_t as_type;           /**< Type that describes the serialized output */
+    ecs_meta_serialize_t serialize; /**< Serialize action */
 
     /* Deserializer interface 
      * Only override the callbacks that are valid for the opaque type. If a
@@ -326,69 +316,44 @@ typedef struct EcsOpaque {
      */
 
     /** Assign bool value */
-    void (*assign_bool)(
-        void *dst, 
-        bool value);
+    void (*assign_bool)(void *dst, bool value);
 
     /** Assign char value */
-    void (*assign_char)(
-        void *dst, 
-        char value);
+    void (*assign_char)(void *dst, char value);
 
     /** Assign int value */
-    void (*assign_int)(
-        void *dst, 
-        int64_t value);
+    void (*assign_int)(void *dst, int64_t value);
 
     /** Assign unsigned int value */
-    void (*assign_uint)(
-        void *dst, 
-        uint64_t value);
+    void (*assign_uint)(void *dst, uint64_t value);
 
     /** Assign float value */
-    void (*assign_float)(
-        void *dst, 
-        double value);
+    void (*assign_float)(void *dst, double value);
 
     /** Assign string value */
-    void (*assign_string)(
-        void *dst, 
-        const char *value);
+    void (*assign_string)(void *dst, const char *value);
 
     /** Assign entity value */
-    void (*assign_entity)(
-        void *dst,
-        ecs_world_t *world,
-        ecs_entity_t entity);
+    void (*assign_entity)(void *dst, ecs_world_t *world, ecs_entity_t entity);
 
     /** Assign null value */
-    void (*assign_null)(
-        void *dst);
+    void (*assign_null)(void *dst);
 
     /** Clear collection elements */
-    void (*clear)(
-        void *dst);
+    void (*clear)(void *dst);
 
     /** Ensure & get collection element */
-    void* (*ensure_element)(
-        void *dst, 
-        size_t elem);
+    void *(*ensure_element)(void *dst, size_t elem);
 
     /** Ensure & get element */
-    void* (*ensure_member)(
-        void *dst, 
-        const char *member);
+    void *(*ensure_member)(void *dst, const char *member);
 
     /** Return number of elements */
-    size_t (*count)(
-        const void *dst);
-    
-    /** Resize to number of elements */
-    void (*resize)(
-        void *dst, 
-        size_t count);
-} EcsOpaque;
+    size_t (*count)(const void *dst);
 
+    /** Resize to number of elements */
+    void (*resize)(void *dst, size_t count);
+} EcsOpaque;
 
 /* Units */
 
@@ -406,17 +371,16 @@ typedef struct ecs_unit_translation_t {
 
 typedef struct EcsUnit {
     char *symbol;
-    ecs_entity_t prefix; /**< Order of magnitude prefix relative to derived */
-    ecs_entity_t base;   /**< Base unit (e.g. "meters") */
-    ecs_entity_t over;   /**< Over unit (e.g. "per second") */
+    ecs_entity_t prefix;                /**< Order of magnitude prefix relative to derived */
+    ecs_entity_t base;                  /**< Base unit (e.g. "meters") */
+    ecs_entity_t over;                  /**< Over unit (e.g. "per second") */
     ecs_unit_translation_t translation; /**< Translation for derived unit */
 } EcsUnit;
 
 typedef struct EcsUnitPrefix {
-    char *symbol;        /**< Symbol of prefix (e.g. "K", "M", "Ki") */
+    char *symbol;                       /**< Symbol of prefix (e.g. "K", "M", "Ki") */
     ecs_unit_translation_t translation; /**< Translation of prefix */
 } EcsUnitPrefix;
-
 
 /* Serializer utilities */
 
@@ -456,36 +420,35 @@ typedef enum ecs_meta_type_op_kind_t {
 
 typedef struct ecs_meta_type_op_t {
     ecs_meta_type_op_kind_t kind;
-    ecs_size_t offset;      /**< Offset of current field */
+    ecs_size_t offset; /**< Offset of current field */
     int32_t count;
-    const char *name;       /**< Name of value (only used for struct members) */
-    int32_t op_count;       /**< Number of operations until next field or end */
-    ecs_size_t size;        /**< Size of type of operation */
+    const char *name; /**< Name of value (only used for struct members) */
+    int32_t op_count; /**< Number of operations until next field or end */
+    ecs_size_t size;  /**< Size of type of operation */
     ecs_entity_t type;
     ecs_entity_t unit;
     ecs_hashmap_t *members; /**< string -> member index (structs only) */
 } ecs_meta_type_op_t;
 
 typedef struct EcsMetaTypeSerialized {
-    ecs_vector_t* ops;      /**< vector<ecs_meta_type_op_t> */
+    ecs_vector_t *ops; /**< vector<ecs_meta_type_op_t> */
 } EcsMetaTypeSerialized;
-
 
 /* Deserializer utilities */
 
 #define ECS_META_MAX_SCOPE_DEPTH (32) /* >32 levels of nesting is not sane */
 
 typedef struct ecs_meta_scope_t {
-    ecs_entity_t type;        /**< The type being iterated */
-    ecs_meta_type_op_t *ops;  /**< The type operations (see ecs_meta_type_op_t) */
-    int32_t op_count;         /**< Number of operations in ops array to process */
-    int32_t op_cur;           /**< Current operation */
-    int32_t elem_cur;         /**< Current element (for collections) */
-    int32_t prev_depth;       /**< Depth to restore, in case dotmember was used */
-    void *ptr;                /**< Pointer to the value being iterated */
+    ecs_entity_t type;       /**< The type being iterated */
+    ecs_meta_type_op_t *ops; /**< The type operations (see ecs_meta_type_op_t) */
+    int32_t op_count;        /**< Number of operations in ops array to process */
+    int32_t op_cur;          /**< Current operation */
+    int32_t elem_cur;        /**< Current element (for collections) */
+    int32_t prev_depth;      /**< Depth to restore, in case dotmember was used */
+    void *ptr;               /**< Pointer to the value being iterated */
 
     const EcsComponent *comp; /**< Pointer to component, in case size/alignment is needed */
-    const EcsOpaque *opaque;  /**< Opaque type interface */ 
+    const EcsOpaque *opaque;  /**< Opaque type interface */
     ecs_vector_t **vector;    /**< Current vector, in case a vector is iterated */
     ecs_hashmap_t *members;   /**< string -> member index */
     bool is_collection;       /**< Is the scope iterating elements? */
@@ -499,76 +462,59 @@ typedef struct ecs_meta_cursor_t {
     ecs_meta_scope_t scope[ECS_META_MAX_SCOPE_DEPTH];
     int32_t depth;
     bool valid;
-    bool is_primitive_scope;  /**< If in root scope, this allows for a push for primitive types */
+    bool is_primitive_scope; /**< If in root scope, this allows for a push for primitive types */
 
     /* Custom entity lookup action for overriding default ecs_lookup_fullpath */
-    ecs_entity_t (*lookup_action)(const ecs_world_t*, const char*, void*);
+    ecs_entity_t (*lookup_action)(const ecs_world_t *, const char *, void *);
     void *lookup_ctx;
 } ecs_meta_cursor_t;
 
 FLECS_API
-ecs_meta_cursor_t ecs_meta_cursor(
-    const ecs_world_t *world,
-    ecs_entity_t type,
-    void *ptr);
+ecs_meta_cursor_t ecs_meta_cursor(const ecs_world_t *world, ecs_entity_t type, void *ptr);
 
 /** Get pointer to current field */
 FLECS_API
-void* ecs_meta_get_ptr(
-    ecs_meta_cursor_t *cursor);
+void *ecs_meta_get_ptr(ecs_meta_cursor_t *cursor);
 
 /** Move cursor to next field */
 FLECS_API
-int ecs_meta_next(
-    ecs_meta_cursor_t *cursor);
+int ecs_meta_next(ecs_meta_cursor_t *cursor);
 
 /** Move cursor to a element */
 FLECS_API
-int ecs_meta_elem(
-    ecs_meta_cursor_t *cursor,
-    int32_t elem);
+int ecs_meta_elem(ecs_meta_cursor_t *cursor, int32_t elem);
 
 /** Move cursor to member */
 FLECS_API
-int ecs_meta_member(
-    ecs_meta_cursor_t *cursor,
-    const char *name);
+int ecs_meta_member(ecs_meta_cursor_t *cursor, const char *name);
 
 /** Move cursor to member, supports dot-separated nested members */
 FLECS_API
-int ecs_meta_dotmember(
-    ecs_meta_cursor_t *cursor,
-    const char *name);
+int ecs_meta_dotmember(ecs_meta_cursor_t *cursor, const char *name);
 
 /** Push a scope (required/only valid for structs & collections) */
 FLECS_API
-int ecs_meta_push(
-    ecs_meta_cursor_t *cursor);
+int ecs_meta_push(ecs_meta_cursor_t *cursor);
 
 /** Pop a struct or collection scope (must follow a push) */
 FLECS_API
-int ecs_meta_pop(
-    ecs_meta_cursor_t *cursor);
+int ecs_meta_pop(ecs_meta_cursor_t *cursor);
 
 /** Is the current scope a collection? */
 FLECS_API
-bool ecs_meta_is_collection(
-    const ecs_meta_cursor_t *cursor);
+bool ecs_meta_is_collection(const ecs_meta_cursor_t *cursor);
 
 /** Get type of current element. */
 FLECS_API
-ecs_entity_t ecs_meta_get_type(
-    const ecs_meta_cursor_t *cursor);
+ecs_entity_t ecs_meta_get_type(const ecs_meta_cursor_t *cursor);
 
 /** Get unit of current element. */
 FLECS_API
-ecs_entity_t ecs_meta_get_unit(
-    const ecs_meta_cursor_t *cursor);
+ecs_entity_t ecs_meta_get_unit(const ecs_meta_cursor_t *cursor);
 
 /** Get member name of current member */
 FLECS_API
-const char* ecs_meta_get_member(
-    const ecs_meta_cursor_t *cursor);
+const char *ecs_meta_get_member(const ecs_meta_cursor_t *cursor);
 
 /* The set functions assign the field with the specified value. If the value
  * does not have the same type as the field, it will be cased to the field type.
@@ -576,103 +522,77 @@ const char* ecs_meta_get_member(
 
 /** Set field with boolean value */
 FLECS_API
-int ecs_meta_set_bool(
-    ecs_meta_cursor_t *cursor,
-    bool value);
+int ecs_meta_set_bool(ecs_meta_cursor_t *cursor, bool value);
 
 /** Set field with char value */
 FLECS_API
-int ecs_meta_set_char(
-    ecs_meta_cursor_t *cursor,
-    char value);
+int ecs_meta_set_char(ecs_meta_cursor_t *cursor, char value);
 
 /** Set field with int value */
 FLECS_API
-int ecs_meta_set_int(
-    ecs_meta_cursor_t *cursor,
-    int64_t value);
+int ecs_meta_set_int(ecs_meta_cursor_t *cursor, int64_t value);
 
 /** Set field with uint value */
 FLECS_API
-int ecs_meta_set_uint(
-    ecs_meta_cursor_t *cursor,
-    uint64_t value);
+int ecs_meta_set_uint(ecs_meta_cursor_t *cursor, uint64_t value);
 
 /** Set field with float value */
 FLECS_API
-int ecs_meta_set_float(
-    ecs_meta_cursor_t *cursor,
-    double value);
+int ecs_meta_set_float(ecs_meta_cursor_t *cursor, double value);
 
 /** Set field with string value */
 FLECS_API
-int ecs_meta_set_string(
-    ecs_meta_cursor_t *cursor,
-    const char *value);
+int ecs_meta_set_string(ecs_meta_cursor_t *cursor, const char *value);
 
 /** Set field with string literal value (has enclosing "") */
 FLECS_API
-int ecs_meta_set_string_literal(
-    ecs_meta_cursor_t *cursor,
-    const char *value);
+int ecs_meta_set_string_literal(ecs_meta_cursor_t *cursor, const char *value);
 
 /** Set field with entity value */
 FLECS_API
-int ecs_meta_set_entity(
-    ecs_meta_cursor_t *cursor,
-    ecs_entity_t value);
+int ecs_meta_set_entity(ecs_meta_cursor_t *cursor, ecs_entity_t value);
 
 /** Set field with null value */
 FLECS_API
-int ecs_meta_set_null(
-    ecs_meta_cursor_t *cursor);
+int ecs_meta_set_null(ecs_meta_cursor_t *cursor);
 
 /** Set field with dynamic value */
 FLECS_API
-int ecs_meta_set_value(
-    ecs_meta_cursor_t *cursor,
-    const ecs_value_t *value);
+int ecs_meta_set_value(ecs_meta_cursor_t *cursor, const ecs_value_t *value);
 
 /* Functions for getting members. */
 
 /** Get field value as boolean. */
 FLECS_API
-bool ecs_meta_get_bool(
-    const ecs_meta_cursor_t *cursor);
+bool ecs_meta_get_bool(const ecs_meta_cursor_t *cursor);
 
 /** Get field value as char. */
 FLECS_API
-char ecs_meta_get_char(
-    const ecs_meta_cursor_t *cursor);
+char ecs_meta_get_char(const ecs_meta_cursor_t *cursor);
 
 /** Get field value as signed integer. */
 FLECS_API
-int64_t ecs_meta_get_int(
-    const ecs_meta_cursor_t *cursor);
+int64_t ecs_meta_get_int(const ecs_meta_cursor_t *cursor);
 
 /** Get field value as unsigned integer. */
 FLECS_API
-uint64_t ecs_meta_get_uint(
-    const ecs_meta_cursor_t *cursor);
+uint64_t ecs_meta_get_uint(const ecs_meta_cursor_t *cursor);
 
 /** Get field value as float. */
 FLECS_API
-double ecs_meta_get_float(
-    const ecs_meta_cursor_t *cursor);
+double ecs_meta_get_float(const ecs_meta_cursor_t *cursor);
 
 /** Get field value as string. 
  * This operation does not perform conversions. If the field is not a string,
  * this operation will fail.
  */
 FLECS_API
-const char* ecs_meta_get_string(
-    const ecs_meta_cursor_t *cursor);
+const char *ecs_meta_get_string(const ecs_meta_cursor_t *cursor);
 
 /** Get field value as entity. 
  * This operation does not perform conversions. */
 FLECS_API
-ecs_entity_t ecs_meta_get_entity(
-    const ecs_meta_cursor_t *cursor);
+ecs_entity_t ecs_meta_get_entity(const ecs_meta_cursor_t *cursor);
 
 /* API functions for creating meta types */
 
@@ -684,9 +604,7 @@ typedef struct ecs_primitive_desc_t {
 
 /** Create a new primitive type */
 FLECS_API
-ecs_entity_t ecs_primitive_init(
-    ecs_world_t *world,
-    const ecs_primitive_desc_t *desc);
+ecs_entity_t ecs_primitive_init(ecs_world_t *world, const ecs_primitive_desc_t *desc);
 
 /** Used with ecs_enum_init. */
 typedef struct ecs_enum_desc_t {
@@ -696,10 +614,7 @@ typedef struct ecs_enum_desc_t {
 
 /** Create a new enum type */
 FLECS_API
-ecs_entity_t ecs_enum_init(
-    ecs_world_t *world,
-    const ecs_enum_desc_t *desc);
-
+ecs_entity_t ecs_enum_init(ecs_world_t *world, const ecs_enum_desc_t *desc);
 
 /** Used with ecs_bitmask_init. */
 typedef struct ecs_bitmask_desc_t {
@@ -709,10 +624,7 @@ typedef struct ecs_bitmask_desc_t {
 
 /** Create a new bitmask type */
 FLECS_API
-ecs_entity_t ecs_bitmask_init(
-    ecs_world_t *world,
-    const ecs_bitmask_desc_t *desc);
-
+ecs_entity_t ecs_bitmask_init(ecs_world_t *world, const ecs_bitmask_desc_t *desc);
 
 /** Used with ecs_array_init. */
 typedef struct ecs_array_desc_t {
@@ -723,10 +635,7 @@ typedef struct ecs_array_desc_t {
 
 /** Create a new array type */
 FLECS_API
-ecs_entity_t ecs_array_init(
-    ecs_world_t *world,
-    const ecs_array_desc_t *desc);
-
+ecs_entity_t ecs_array_init(ecs_world_t *world, const ecs_array_desc_t *desc);
 
 /** Used with ecs_vector_init. */
 typedef struct ecs_vector_desc_t {
@@ -736,10 +645,7 @@ typedef struct ecs_vector_desc_t {
 
 /** Create a new vector type */
 FLECS_API
-ecs_entity_t ecs_vector_init(
-    ecs_world_t *world,
-    const ecs_vector_desc_t *desc);
-
+ecs_entity_t ecs_vector_init(ecs_world_t *world, const ecs_vector_desc_t *desc);
 
 /** Used with ecs_struct_init. */
 typedef struct ecs_struct_desc_t {
@@ -749,9 +655,7 @@ typedef struct ecs_struct_desc_t {
 
 /** Create a new struct type */
 FLECS_API
-ecs_entity_t ecs_struct_init(
-    ecs_world_t *world,
-    const ecs_struct_desc_t *desc);
+ecs_entity_t ecs_struct_init(ecs_world_t *world, const ecs_struct_desc_t *desc);
 
 /** Used with ecs_opaque_init. */
 typedef struct ecs_opaque_desc_t {
@@ -778,9 +682,7 @@ typedef struct ecs_opaque_desc_t {
  * - member, which specifies a member to be serialized (in the case of a struct)
  */
 FLECS_API
-ecs_entity_t ecs_opaque_init(
-    ecs_world_t *world,
-    const ecs_opaque_desc_t *desc);
+ecs_entity_t ecs_opaque_init(ecs_world_t *world, const ecs_opaque_desc_t *desc);
 
 /** Used with ecs_unit_init. */
 typedef struct ecs_unit_desc_t {
@@ -813,9 +715,7 @@ typedef struct ecs_unit_desc_t {
 
 /** Create a new unit */
 FLECS_API
-ecs_entity_t ecs_unit_init(
-    ecs_world_t *world,
-    const ecs_unit_desc_t *desc);
+ecs_entity_t ecs_unit_init(ecs_world_t *world, const ecs_unit_desc_t *desc);
 
 /** Used with ecs_unit_prefix_init. */
 typedef struct ecs_unit_prefix_desc_t {
@@ -831,52 +731,38 @@ typedef struct ecs_unit_prefix_desc_t {
 
 /** Create a new unit prefix */
 FLECS_API
-ecs_entity_t ecs_unit_prefix_init(
-    ecs_world_t *world,
-    const ecs_unit_prefix_desc_t *desc);
+ecs_entity_t ecs_unit_prefix_init(ecs_world_t *world, const ecs_unit_prefix_desc_t *desc);
 
 /** Create a new quantity */
 FLECS_API
-ecs_entity_t ecs_quantity_init(
-    ecs_world_t *world,
-    const ecs_entity_desc_t *desc);
+ecs_entity_t ecs_quantity_init(ecs_world_t *world, const ecs_entity_desc_t *desc);
 
 /* Convenience macros */
 
-#define ecs_primitive(world, ...)\
-    ecs_primitive_init(world, &(ecs_primitive_desc_t) __VA_ARGS__ )
+#define ecs_primitive(world, ...) ecs_primitive_init(world, &(ecs_primitive_desc_t) __VA_ARGS__)
 
-#define ecs_enum(world, ...)\
-    ecs_enum_init(world, &(ecs_enum_desc_t) __VA_ARGS__ )
+#define ecs_enum(world, ...) ecs_enum_init(world, &(ecs_enum_desc_t) __VA_ARGS__)
 
-#define ecs_bitmask(world, ...)\
-    ecs_bitmask_init(world, &(ecs_bitmask_desc_t) __VA_ARGS__ )
+#define ecs_bitmask(world, ...) ecs_bitmask_init(world, &(ecs_bitmask_desc_t) __VA_ARGS__)
 
-#define ecs_array(world, ...)\
-    ecs_array_init(world, &(ecs_array_desc_t) __VA_ARGS__ )
+#define ecs_array(world, ...) ecs_array_init(world, &(ecs_array_desc_t) __VA_ARGS__)
 
-#define ecs_vector(world, ...)\
-    ecs_vector_init(world, &(ecs_vector_desc_t) __VA_ARGS__ )
+#define ecs_vector(world, ...) ecs_vector_init(world, &(ecs_vector_desc_t) __VA_ARGS__)
 
-#define ecs_opaque(world, ...)\
-    ecs_opaque_init(world, &(ecs_opaque_desc_t) __VA_ARGS__ )
+#define ecs_opaque(world, ...) ecs_opaque_init(world, &(ecs_opaque_desc_t) __VA_ARGS__)
 
-#define ecs_struct(world, ...)\
-    ecs_struct_init(world, &(ecs_struct_desc_t) __VA_ARGS__ )
+#define ecs_struct(world, ...) ecs_struct_init(world, &(ecs_struct_desc_t) __VA_ARGS__)
 
-#define ecs_unit(world, ...)\
-    ecs_unit_init(world, &(ecs_unit_desc_t) __VA_ARGS__ )
+#define ecs_unit(world, ...) ecs_unit_init(world, &(ecs_unit_desc_t) __VA_ARGS__)
 
-#define ecs_unit_prefix(world, ...)\
-    ecs_unit_prefix_init(world, &(ecs_unit_prefix_desc_t) __VA_ARGS__ )
+#define ecs_unit_prefix(world, ...)                                                                \
+    ecs_unit_prefix_init(world, &(ecs_unit_prefix_desc_t) __VA_ARGS__)
 
-#define ecs_quantity(world, ...)\
-    ecs_quantity_init(world, &(ecs_entity_desc_t) __VA_ARGS__ )
+#define ecs_quantity(world, ...) ecs_quantity_init(world, &(ecs_entity_desc_t) __VA_ARGS__)
 
 /* Module import */
 FLECS_API
-void FlecsMetaImport(
-    ecs_world_t *world);
+void FlecsMetaImport(ecs_world_t *world);
 
 #ifdef __cplusplus
 }
