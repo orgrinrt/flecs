@@ -65,21 +65,21 @@ if(FLECS_SHARED)
     add_flecs_target(flecs SHARED)
 endif()
 
-if(FLECS_STATIC)
+if (FLECS_STATIC)
     add_flecs_target(flecs_static STATIC)
     target_compile_definitions(flecs_static PUBLIC flecs_STATIC)
-endif()
+endif ()
 
 message(STATUS "Targets: ${FLECS_TARGETS}")
 
 # define the install steps
 include(GNUInstallDirs)
-install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/"
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-        FILES_MATCHING
-        PATTERN "*.h"
-        PATTERN "*.hpp"
-        PATTERN "*.inl")
+#install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/"
+#        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+#        FILES_MATCHING
+#        PATTERN "*.h"
+#        PATTERN "*.hpp"
+#        PATTERN "*.inl")
 
 install(TARGETS ${FLECS_TARGETS}
         EXPORT flecs-export
