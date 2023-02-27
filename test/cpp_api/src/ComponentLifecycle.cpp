@@ -902,31 +902,38 @@ void ComponentLifecycle_emplace_no_default_ctor() {
 }
 
 void ComponentLifecycle_emplace_defer_use_move_ctor() {
-    flecs::world ecs;
+    {
+        flecs::world ecs;
 
-    auto e = ecs.entity();
+        auto e = ecs.entity();
 
-    ecs.defer_begin();
-    e.emplace<CountNoDefaultCtor>(10);
-    test_assert(!e.has<CountNoDefaultCtor>());
+        ecs.defer_begin();
+        e.emplace<CountNoDefaultCtor>(10);
+        test_assert(!e.has<CountNoDefaultCtor>());
+        test_int(CountNoDefaultCtor::ctor_invoked, 1);
+        test_int(CountNoDefaultCtor::dtor_invoked, 0);
+        test_int(CountNoDefaultCtor::move_invoked, 0);
+        test_int(CountNoDefaultCtor::move_ctor_invoked, 0);
+        ecs.defer_end();
+
+        test_assert(e.has<CountNoDefaultCtor>());
+        test_int(CountNoDefaultCtor::ctor_invoked, 1);
+        test_int(CountNoDefaultCtor::dtor_invoked, 1);
+        test_int(CountNoDefaultCtor::move_invoked, 0);
+        test_int(CountNoDefaultCtor::move_ctor_invoked, 1);
+
+        const CountNoDefaultCtor *ptr = e.get<CountNoDefaultCtor>();
+        test_assert(ptr != NULL);
+        test_int(ptr->value, 10);
+
+        test_int(CountNoDefaultCtor::ctor_invoked, 1);
+        test_int(CountNoDefaultCtor::dtor_invoked, 1);
+        test_int(CountNoDefaultCtor::move_invoked, 0);
+        test_int(CountNoDefaultCtor::move_ctor_invoked, 1);
+    }
+
     test_int(CountNoDefaultCtor::ctor_invoked, 1);
-    test_int(CountNoDefaultCtor::dtor_invoked, 0);
-    test_int(CountNoDefaultCtor::move_invoked, 0);
-    test_int(CountNoDefaultCtor::move_ctor_invoked, 0);
-    ecs.defer_end();
-
-    test_assert(e.has<CountNoDefaultCtor>());
-    test_int(CountNoDefaultCtor::ctor_invoked, 1);
-    test_int(CountNoDefaultCtor::dtor_invoked, 0);
-    test_int(CountNoDefaultCtor::move_invoked, 0);
-    test_int(CountNoDefaultCtor::move_ctor_invoked, 1);
-
-    const CountNoDefaultCtor *ptr = e.get<CountNoDefaultCtor>();
-    test_assert(ptr != NULL);
-    test_int(ptr->value, 10);
-
-    test_int(CountNoDefaultCtor::ctor_invoked, 1);
-    test_int(CountNoDefaultCtor::dtor_invoked, 0);
+    test_int(CountNoDefaultCtor::dtor_invoked, 2);
     test_int(CountNoDefaultCtor::move_invoked, 0);
     test_int(CountNoDefaultCtor::move_ctor_invoked, 1);
 }
@@ -1713,4 +1720,71 @@ void ComponentLifecycle_set_override_pair_w_entity_no_copy() {
     test_int(ptr->x_, 10);
 
     test_assert(e.has(flecs::Override | ecs.pair<NoCopy>(tag)));
+}
+
+void ComponentLifecycle_dtor_after_defer_set() {
+    {
+        flecs::world ecs;
+
+        auto e = ecs.entity();
+
+        ecs.defer_begin();
+        e.set<Pod>({10});
+        test_assert(!e.has<Pod>());
+        test_int(Pod::ctor_invoked, 2);
+        test_int(Pod::dtor_invoked, 1);
+        test_int(Pod::move_invoked, 1);
+        test_int(Pod::move_ctor_invoked, 0);
+        ecs.defer_end();
+
+        test_assert(e.has<Pod>());
+        test_int(Pod::ctor_invoked, 3);
+        test_int(Pod::dtor_invoked, 2);
+        test_int(Pod::move_invoked, 2);
+        test_int(Pod::move_ctor_invoked, 0);
+
+        const Pod *ptr = e.get<Pod>();
+        test_assert(ptr != NULL);
+        test_int(ptr->value, 10);
+
+        test_int(Pod::ctor_invoked, 3);
+        test_int(Pod::dtor_invoked, 2);
+        test_int(Pod::move_invoked, 2);
+        test_int(Pod::move_ctor_invoked, 0);
+    }
+
+    test_int(Pod::ctor_invoked, 3);
+    test_int(Pod::dtor_invoked, 3);
+    test_int(Pod::move_invoked, 2);
+    test_int(Pod::move_ctor_invoked, 0);
+}
+
+void ComponentLifecycle_dtor_with_relation() {
+    {
+        flecs::world ecs;
+
+        auto e = ecs.entity();
+        auto e2 = ecs.entity().set<Pod>({5});
+
+        e.set<Pod>({10}).add<Tag>(e2);
+
+        test_int(Pod::ctor_invoked, 4);
+        test_int(Pod::dtor_invoked, 3);
+        test_int(Pod::move_invoked, 2);
+        test_int(Pod::move_ctor_invoked, 1);
+
+        const Pod *ptr = e.get<Pod>();
+        test_assert(ptr != NULL);
+        test_int(ptr->value, 10);
+
+        test_int(Pod::ctor_invoked, 4);
+        test_int(Pod::dtor_invoked, 3);
+        test_int(Pod::move_invoked, 2);
+        test_int(Pod::move_ctor_invoked, 1);
+    }
+
+    test_int(Pod::ctor_invoked, 5);
+    test_int(Pod::dtor_invoked, 6);
+    test_int(Pod::move_invoked, 4);
+    test_int(Pod::move_ctor_invoked, 1);
 }

@@ -1836,7 +1836,6 @@ void Query_query_for_switch_filter_term() {
     test_uint(it.entities[0], e1);
     test_uint(ecs_field_id(&it, 1), ecs_pair(Movement, EcsWildcard));
     test_int(it.sizes[0], ECS_SIZEOF(ecs_entity_t));
-    test_assert(it.ptrs == NULL);
     test_bool(false, ecs_query_next(&it));
 
     ecs_fini(world);
@@ -3007,7 +3006,7 @@ void Query_query_changed_w_or() {
         .filter.terms = {
             { ecs_id(Position), .inout = EcsIn },
             { TagA, .oper = EcsOr },
-            { TagB, .oper = EcsOr },
+            { TagB },
             { ecs_id(Velocity), .inout = EcsIn }
         }
     });
@@ -3061,7 +3060,7 @@ void Query_query_changed_or() {
         .filter.terms = {
             { TagA },
             { ecs_id(Position), .inout = EcsIn, .oper = EcsOr },
-            { ecs_id(Velocity), .inout = EcsIn, .oper = EcsOr },
+            { ecs_id(Velocity), .inout = EcsIn },
             { TagB }
         }
     });
@@ -5485,7 +5484,7 @@ void Query_filter_term() {
     test_assert(it.entities != NULL);
     test_assert(it.entities[0] == e);
 
-    test_assert(it.ptrs == NULL);
+    test_assert(it.ptrs != NULL);
     test_assert(it.columns != NULL);
 
     test_bool(ecs_query_next(&it), false);
@@ -7739,12 +7738,11 @@ void Query_query_long_or_w_ref() {
     ecs_entity_t e2 = ecs_new(world, A);
 
     ecs_query_t *q = ecs_query_new(world, 
-        "Position(e), A || B || C || D || E || F, G || H || I || J || K || L ||"
+        "Position(e), A || B || C || D || E || F || G || H || I || J || K || L ||"
         "M || N || O || P || Q || R");
     test_assert(q != NULL);
 
     ecs_iter_t it = ecs_query_iter(world, q);
-
     test_bool(true, ecs_query_next(&it));
     test_uint(ecs_id(Position), ecs_field_id(&it, 1));
     test_uint(A, ecs_field_id(&it, 2));

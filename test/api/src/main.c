@@ -351,6 +351,7 @@ void EnabledComponents_query_randomized_3_bitsets(void);
 void EnabledComponents_query_randomized_4_bitsets(void);
 void EnabledComponents_defer_enable(void);
 void EnabledComponents_sort(void);
+void EnabledComponents_table_move_2_from_3(void);
 
 // Testsuite 'Remove'
 void Remove_zero(void);
@@ -855,6 +856,7 @@ void ComponentLifecycle_on_add_after_ctor_w_add_to(void);
 void ComponentLifecycle_with_before_hooks(void);
 void ComponentLifecycle_move_ctor_on_move(void);
 void ComponentLifecycle_ptr_to_self(void);
+void ComponentLifecycle_ctor_move_dtor_from_move_ctor(void);
 
 // Testsuite 'Sorting'
 void Sorting_sort_by_component(void);
@@ -883,6 +885,7 @@ void Sorting_sort_4_entities_4_types(void);
 void Sorting_sort_1000_entities_2_types_again(void);
 void Sorting_sort_1000_entities_add_type_after_sort(void);
 void Sorting_sort_shared_component(void);
+void Sorting_sort_shared_component_childof(void);
 void Sorting_sort_w_tags_only(void);
 void Sorting_sort_childof_marked(void);
 void Sorting_sort_isa_marked(void);
@@ -890,6 +893,8 @@ void Sorting_sort_relation_marked(void);
 void Sorting_dont_resort_after_set_unsorted_component(void);
 void Sorting_dont_resort_after_set_unsorted_component_w_tag(void);
 void Sorting_dont_resort_after_set_unsorted_component_w_tag_w_out_term(void);
+void Sorting_sort_component_not_queried_for(void);
+void Sorting_sort_by_wildcard(void);
 
 // Testsuite 'SortingEntireTable'
 void SortingEntireTable_sort_by_component(void);
@@ -992,6 +997,36 @@ void Filter_filter_filter(void);
 void Filter_filter_double_init(void);
 void Filter_filter_double_init_w_expr(void);
 void Filter_filter_double_init_w_expr_optional(void);
+void Filter_filter_w_tag_term_is_no_data(void);
+void Filter_filter_w_inout_none_term_is_no_data(void);
+void Filter_filter_w_tag_and_inout_none_term_is_no_data(void);
+void Filter_filter_w_not_term_is_no_data(void);
+void Filter_filter_w_no_transitive_pair(void);
+void Filter_filter_w_transitive_pair_any_src(void);
+void Filter_filter_w_transitive_pair(void);
+void Filter_filter_w_transitive_tag_no_pair(void);
+void Filter_filter_w_transitive_tag_self_tgt(void);
+void Filter_filter_w_transitive_tag_any_tgt(void);
+void Filter_filter_w_pair_same_vars(void);
+void Filter_filter_w_pair_not_same_vars(void);
+void Filter_filter_w_pair_no_vars_not_same_vars(void);
+void Filter_filter_w_pair_wildcard_not_same_vars(void);
+void Filter_filter_w_pair_any_not_same_vars(void);
+void Filter_filter_w_no_pair_not_same_vars(void);
+void Filter_filter_not_childof_any(void);
+void Filter_filter_w_inherited_id(void);
+void Filter_filter_w_inherited_pair(void);
+void Filter_filter_w_non_inherited_id(void);
+void Filter_filter_w_non_inherited_pair(void);
+void Filter_filter_w_first_rel(void);
+void Filter_filter_w_first_rel_self(void);
+void Filter_filter_w_first_rel_down(void);
+void Filter_filter_w_first_rel_self_down(void);
+void Filter_filter_w_first_rel_reflexive(void);
+void Filter_filter_w_first_rel_reflexive_self(void);
+void Filter_filter_w_first_rel_reflexive_down(void);
+void Filter_filter_w_first_rel_reflexive_self_down(void);
+void Filter_filter_w_first_rel_non_traversable(void);
 void Filter_term_w_id(void);
 void Filter_term_w_pair_id(void);
 void Filter_term_w_pred_obj(void);
@@ -1206,6 +1241,8 @@ void FilterStr_one_term_w_first_var(void);
 void FilterStr_one_term_w_second_var(void);
 void FilterStr_one_term_w_first_var_entity_src(void);
 void FilterStr_one_term_w_pair_w_0_entity(void);
+void FilterStr_not_term(void);
+void FilterStr_wildcard_term(void);
 
 // Testsuite 'Query'
 void Query_simple_query_existing_table(void);
@@ -1516,6 +1553,8 @@ void Pairs_get_n_targets(void);
 void Pairs_get_target_from_base(void);
 void Pairs_get_target_from_2nd_base(void);
 void Pairs_get_target_from_base_w_pair_on_instance(void);
+void Pairs_get_childof_target_from_base(void);
+void Pairs_get_dontinherit_target_from_base(void);
 void Pairs_get_target_for_id_from_self(void);
 void Pairs_get_target_for_id_from_base(void);
 void Pairs_get_target_for_id_from_nested_base(void);
@@ -1767,6 +1806,7 @@ void Observer_on_set_2_pairs_w_uni_observer(void);
 void Observer_on_set_2_pairs_w_multi_observer(void);
 void Observer_on_remove_target_from_base_at_offset(void);
 void Observer_on_remove_target_component_from_base_at_offset(void);
+void Observer_filter_observer_after_observer(void);
 void Observer_cache_test_1(void);
 void Observer_cache_test_2(void);
 void Observer_cache_test_3(void);
@@ -2222,6 +2262,8 @@ void DeferredActions_get_mut_override(void);
 void DeferredActions_set_override(void);
 void DeferredActions_absent_get_mut_for_entity_w_tag(void);
 void DeferredActions_on_set_hook_before_on_add_for_existing_component(void);
+void DeferredActions_defer_2_sets_w_observer_same_component(void);
+void DeferredActions_defer_2_sets_w_observer_other_component(void);
 
 // Testsuite 'SingleThreadStaging'
 void SingleThreadStaging_setup(void);
@@ -3705,6 +3747,10 @@ bake_test_case EnabledComponents_testcases[] = {
     {
         "sort",
         EnabledComponents_sort
+    },
+    {
+        "table_move_2_from_3",
+        EnabledComponents_table_move_2_from_3
     }
 };
 
@@ -5622,6 +5668,10 @@ bake_test_case ComponentLifecycle_testcases[] = {
     {
         "ptr_to_self",
         ComponentLifecycle_ptr_to_self
+    },
+    {
+        "ctor_move_dtor_from_move_ctor",
+        ComponentLifecycle_ctor_move_dtor_from_move_ctor
     }
 };
 
@@ -5731,6 +5781,10 @@ bake_test_case Sorting_testcases[] = {
         Sorting_sort_shared_component
     },
     {
+        "sort_shared_component_childof",
+        Sorting_sort_shared_component_childof
+    },
+    {
         "sort_w_tags_only",
         Sorting_sort_w_tags_only
     },
@@ -5757,6 +5811,14 @@ bake_test_case Sorting_testcases[] = {
     {
         "dont_resort_after_set_unsorted_component_w_tag_w_out_term",
         Sorting_dont_resort_after_set_unsorted_component_w_tag_w_out_term
+    },
+    {
+        "sort_component_not_queried_for",
+        Sorting_sort_component_not_queried_for
+    },
+    {
+        "sort_by_wildcard",
+        Sorting_sort_by_wildcard
     }
 };
 
@@ -6155,6 +6217,126 @@ bake_test_case Filter_testcases[] = {
     {
         "filter_double_init_w_expr_optional",
         Filter_filter_double_init_w_expr_optional
+    },
+    {
+        "filter_w_tag_term_is_no_data",
+        Filter_filter_w_tag_term_is_no_data
+    },
+    {
+        "filter_w_inout_none_term_is_no_data",
+        Filter_filter_w_inout_none_term_is_no_data
+    },
+    {
+        "filter_w_tag_and_inout_none_term_is_no_data",
+        Filter_filter_w_tag_and_inout_none_term_is_no_data
+    },
+    {
+        "filter_w_not_term_is_no_data",
+        Filter_filter_w_not_term_is_no_data
+    },
+    {
+        "filter_w_no_transitive_pair",
+        Filter_filter_w_no_transitive_pair
+    },
+    {
+        "filter_w_transitive_pair_any_src",
+        Filter_filter_w_transitive_pair_any_src
+    },
+    {
+        "filter_w_transitive_pair",
+        Filter_filter_w_transitive_pair
+    },
+    {
+        "filter_w_transitive_tag_no_pair",
+        Filter_filter_w_transitive_tag_no_pair
+    },
+    {
+        "filter_w_transitive_tag_self_tgt",
+        Filter_filter_w_transitive_tag_self_tgt
+    },
+    {
+        "filter_w_transitive_tag_any_tgt",
+        Filter_filter_w_transitive_tag_any_tgt
+    },
+    {
+        "filter_w_pair_same_vars",
+        Filter_filter_w_pair_same_vars
+    },
+    {
+        "filter_w_pair_not_same_vars",
+        Filter_filter_w_pair_not_same_vars
+    },
+    {
+        "filter_w_pair_no_vars_not_same_vars",
+        Filter_filter_w_pair_no_vars_not_same_vars
+    },
+    {
+        "filter_w_pair_wildcard_not_same_vars",
+        Filter_filter_w_pair_wildcard_not_same_vars
+    },
+    {
+        "filter_w_pair_any_not_same_vars",
+        Filter_filter_w_pair_any_not_same_vars
+    },
+    {
+        "filter_w_no_pair_not_same_vars",
+        Filter_filter_w_no_pair_not_same_vars
+    },
+    {
+        "filter_not_childof_any",
+        Filter_filter_not_childof_any
+    },
+    {
+        "filter_w_inherited_id",
+        Filter_filter_w_inherited_id
+    },
+    {
+        "filter_w_inherited_pair",
+        Filter_filter_w_inherited_pair
+    },
+    {
+        "filter_w_non_inherited_id",
+        Filter_filter_w_non_inherited_id
+    },
+    {
+        "filter_w_non_inherited_pair",
+        Filter_filter_w_non_inherited_pair
+    },
+    {
+        "filter_w_first_rel",
+        Filter_filter_w_first_rel
+    },
+    {
+        "filter_w_first_rel_self",
+        Filter_filter_w_first_rel_self
+    },
+    {
+        "filter_w_first_rel_down",
+        Filter_filter_w_first_rel_down
+    },
+    {
+        "filter_w_first_rel_self_down",
+        Filter_filter_w_first_rel_self_down
+    },
+    {
+        "filter_w_first_rel_reflexive",
+        Filter_filter_w_first_rel_reflexive
+    },
+    {
+        "filter_w_first_rel_reflexive_self",
+        Filter_filter_w_first_rel_reflexive_self
+    },
+    {
+        "filter_w_first_rel_reflexive_down",
+        Filter_filter_w_first_rel_reflexive_down
+    },
+    {
+        "filter_w_first_rel_reflexive_self_down",
+        Filter_filter_w_first_rel_reflexive_self_down
+    },
+    {
+        "filter_w_first_rel_non_traversable",
+        Filter_filter_w_first_rel_non_traversable
     },
     {
         "term_w_id",
@@ -7006,6 +7188,14 @@ bake_test_case FilterStr_testcases[] = {
     {
         "one_term_w_pair_w_0_entity",
         FilterStr_one_term_w_pair_w_0_entity
+    },
+    {
+        "not_term",
+        FilterStr_not_term
+    },
+    {
+        "wildcard_term",
+        FilterStr_wildcard_term
     }
 };
 
@@ -8233,6 +8423,14 @@ bake_test_case Pairs_testcases[] = {
         Pairs_get_target_from_base_w_pair_on_instance
     },
     {
+        "get_childof_target_from_base",
+        Pairs_get_childof_target_from_base
+    },
+    {
+        "get_dontinherit_target_from_base",
+        Pairs_get_dontinherit_target_from_base
+    },
+    {
         "get_target_for_id_from_self",
         Pairs_get_target_for_id_from_self
     },
@@ -9225,6 +9423,10 @@ bake_test_case Observer_testcases[] = {
     {
         "on_remove_target_component_from_base_at_offset",
         Observer_on_remove_target_component_from_base_at_offset
+    },
+    {
+        "filter_observer_after_observer",
+        Observer_filter_observer_after_observer
     },
     {
         "cache_test_1",
@@ -10979,6 +11181,14 @@ bake_test_case DeferredActions_testcases[] = {
     {
         "on_set_hook_before_on_add_for_existing_component",
         DeferredActions_on_set_hook_before_on_add_for_existing_component
+    },
+    {
+        "defer_2_sets_w_observer_same_component",
+        DeferredActions_defer_2_sets_w_observer_same_component
+    },
+    {
+        "defer_2_sets_w_observer_other_component",
+        DeferredActions_defer_2_sets_w_observer_other_component
     }
 };
 
@@ -11629,7 +11839,7 @@ static bake_test_suite suites[] = {
         "EnabledComponents",
         NULL,
         NULL,
-        51,
+        52,
         EnabledComponents_testcases
     },
     {
@@ -11734,14 +11944,14 @@ static bake_test_suite suites[] = {
         "ComponentLifecycle",
         ComponentLifecycle_setup,
         NULL,
-        78,
+        79,
         ComponentLifecycle_testcases
     },
     {
         "Sorting",
         NULL,
         NULL,
-        33,
+        36,
         Sorting_testcases
     },
     {
@@ -11755,14 +11965,14 @@ static bake_test_suite suites[] = {
         "Filter",
         NULL,
         NULL,
-        257,
+        287,
         Filter_testcases
     },
     {
         "FilterStr",
         NULL,
         NULL,
-        20,
+        22,
         FilterStr_testcases
     },
     {
@@ -11783,7 +11993,7 @@ static bake_test_suite suites[] = {
         "Pairs",
         NULL,
         NULL,
-        103,
+        105,
         Pairs_testcases
     },
     {
@@ -11797,7 +12007,7 @@ static bake_test_suite suites[] = {
         "Observer",
         NULL,
         NULL,
-        105,
+        106,
         Observer_testcases
     },
     {
@@ -11867,7 +12077,7 @@ static bake_test_suite suites[] = {
         "DeferredActions",
         NULL,
         NULL,
-        112,
+        114,
         DeferredActions_testcases
     },
     {

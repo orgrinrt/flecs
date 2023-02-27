@@ -341,6 +341,7 @@ struct ecs_query_t {
     ecs_order_by_action_t order_by;
     ecs_sort_table_action_t sort_table;
     ecs_vector_t *table_slices;
+    int32_t order_by_term;
 
     /* Table grouping */
     ecs_entity_t group_by_id;
@@ -503,6 +504,10 @@ struct ecs_stage_t {
     /* Thread specific allocators */
     ecs_stage_allocators_t allocators;
     ecs_allocator_t allocator;
+
+    /* Caches for rule creation */
+    ecs_vector_t *variables;
+    ecs_vector_t *operations;
 };
 
 /* Component monitor */

@@ -242,6 +242,8 @@ void Entity_children_w_custom_relation(void);
 void Entity_children_w_custom_relation_type(void);
 void Entity_get_depth(void);
 void Entity_get_depth_w_type(void);
+void Entity_to_view(void);
+void Entity_to_view_from_stage(void);
 
 // Testsuite 'Pairs'
 void Pairs_add_component_pair(void);
@@ -888,6 +890,8 @@ void ComponentLifecycle_set_pair_second_no_copy(void);
 void ComponentLifecycle_set_override_no_copy(void);
 void ComponentLifecycle_set_override_pair_no_copy(void);
 void ComponentLifecycle_set_override_pair_w_entity_no_copy(void);
+void ComponentLifecycle_dtor_after_defer_set(void);
+void ComponentLifecycle_dtor_with_relation(void);
 
 // Testsuite 'Refs'
 void Refs_get_ref_by_ptr(void);
@@ -943,6 +947,7 @@ void ImplicitComponents_implicit_const(void);
 void ImplicitComponents_implicit_ref(void);
 void ImplicitComponents_implicit_ptr(void);
 void ImplicitComponents_implicit_const_ref(void);
+void ImplicitComponents_vector_elem_type(void);
 
 // Testsuite 'Snapshot'
 void Snapshot_simple_snapshot(void);
@@ -2095,6 +2100,14 @@ bake_test_case Entity_testcases[] = {
     {
         "get_depth_w_type",
         Entity_get_depth_w_type
+    },
+    {
+        "to_view",
+        Entity_to_view
+    },
+    {
+        "to_view_from_stage",
+        Entity_to_view_from_stage
     }
 };
 
@@ -4604,6 +4617,14 @@ bake_test_case ComponentLifecycle_testcases[] = {
     {
         "set_override_pair_w_entity_no_copy",
         ComponentLifecycle_set_override_pair_w_entity_no_copy
+    },
+    {
+        "dtor_after_defer_set",
+        ComponentLifecycle_dtor_after_defer_set
+    },
+    {
+        "dtor_with_relation",
+        ComponentLifecycle_dtor_with_relation
     }
 };
 
@@ -4809,6 +4830,10 @@ bake_test_case ImplicitComponents_testcases[] = {
     {
         "implicit_const_ref",
         ImplicitComponents_implicit_const_ref
+    },
+    {
+        "vector_elem_type",
+        ImplicitComponents_vector_elem_type
     }
 };
 
@@ -5676,7 +5701,7 @@ static bake_test_suite suites[] = {
         "Entity",
         NULL,
         NULL,
-        229,
+        231,
         Entity_testcases
     },
     {
@@ -5781,7 +5806,7 @@ static bake_test_suite suites[] = {
         "ComponentLifecycle",
         NULL,
         NULL,
-        71,
+        73,
         ComponentLifecycle_testcases
     },
     {
@@ -5802,7 +5827,7 @@ static bake_test_suite suites[] = {
         "ImplicitComponents",
         NULL,
         NULL,
-        27,
+        28,
         ImplicitComponents_testcases
     },
     {

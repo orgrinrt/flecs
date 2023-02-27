@@ -491,6 +491,7 @@ typedef enum ecs_oper_kind_t {
     EcsNotFrom,       /**< Term must match none of the components from term id */
 } ecs_oper_kind_t;
 
+/* Term id flags  */
 #define EcsSelf                       (1u << 1) /**< Match on self */
 #define EcsUp                         (1u << 2) /**< Match by traversing upwards */
 #define EcsDown                       (1u << 3) /**< Match by traversing downwards (derived, cannot be set) */
@@ -500,8 +501,16 @@ typedef enum ecs_oper_kind_t {
 #define EcsIsVariable                 (1u << 7) /**< Term id is a variable */
 #define EcsIsEntity                   (1u << 8) /**< Term id is an entity */
 #define EcsFilter                     (1u << 9) /**< Prevent observer from triggering on term */
-
 #define EcsTraverseFlags              (EcsUp|EcsDown|EcsTraverseAll|EcsSelf|EcsCascade|EcsParent)
+
+/* Term flags discovered & set during filter creation. */
+#define EcsTermMatchAny    (1 << 0)
+#define EcsTermMatchAnySrc (1 << 1)
+#define EcsTermSrcFirstEq  (1 << 2)
+#define EcsTermSrcSecondEq (1 << 3)
+#define EcsTermTransitive  (1 << 4)
+#define EcsTermReflexive   (1 << 5)
+#define EcsTermIdInherited (1 << 6)
 
 /** Type that describes a single identifier in a term */
 typedef struct ecs_term_id_t {
@@ -545,6 +554,8 @@ struct ecs_term_t {
     int32_t field_index;        /**< Index of field for term in iterator */
     ecs_id_record_t *idr;       /**< Cached pointer to internal index */
 
+    ecs_flags16_t flags;        /**< Flags that help eval, set by ecs_filter_init */
+
     bool move;                  /**< Used by internals */
 };
 
@@ -564,7 +575,7 @@ struct ecs_filter_t {
 
     ecs_flags32_t flags;       /**< Filter flags */
     
-    char *variable_names[1];   /**< Array with variable names */
+    char *variable_names[1];   /**< Placeholder variable names array */
 
     /* Mixins */
     ecs_entity_t entity;       /**< Entity associated with filter (optional) */
@@ -3265,6 +3276,23 @@ const ecs_type_hooks_t* ecs_get_hooks_id(
  */
 FLECS_API
 bool ecs_id_is_tag(
+    const ecs_world_t *world,
+    ecs_id_t id);
+
+/** Return whether represents a union.
+ * This operation returns whether the specified type represents a union. Only
+ * pair ids can be unions.
+ * 
+ * An id represents a union when:
+ * - The first element of the pair is EcsUnion/flecs::Union
+ * - The first element of the pair has EcsUnion/flecs::Union
+ *
+ * @param world The world.
+ * @param id The id.
+ * @return Whether the provided id represents a union.
+ */
+FLECS_API
+bool ecs_id_is_union(
     const ecs_world_t *world,
     ecs_id_t id);
 

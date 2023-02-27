@@ -371,7 +371,8 @@
                 "query_randomized_3_bitsets",
                 "query_randomized_4_bitsets",
                 "defer_enable",
-                "sort"
+                "sort",
+                "table_move_2_from_3"
             ]
         }, {
             "id": "Remove",
@@ -905,7 +906,8 @@
                 "on_add_after_ctor_w_add_to",
                 "with_before_hooks",
                 "move_ctor_on_move",
-                "ptr_to_self"
+                "ptr_to_self",
+                "ctor_move_dtor_from_move_ctor"
             ]
         }, {
             "id": "Sorting",
@@ -936,13 +938,16 @@
                 "sort_1000_entities_2_types_again",
                 "sort_1000_entities_add_type_after_sort",
                 "sort_shared_component",
+                "sort_shared_component_childof",
                 "sort_w_tags_only",
                 "sort_childof_marked",
                 "sort_isa_marked",
                 "sort_relation_marked",
                 "dont_resort_after_set_unsorted_component",
                 "dont_resort_after_set_unsorted_component_w_tag",
-                "dont_resort_after_set_unsorted_component_w_tag_w_out_term"
+                "dont_resort_after_set_unsorted_component_w_tag_w_out_term",
+                "sort_component_not_queried_for",
+                "sort_by_wildcard"
             ]
         }, {
             "id": "SortingEntireTable",
@@ -1049,6 +1054,36 @@
                 "filter_double_init",
                 "filter_double_init_w_expr",
                 "filter_double_init_w_expr_optional",
+                "filter_w_tag_term_is_no_data",
+                "filter_w_inout_none_term_is_no_data",
+                "filter_w_tag_and_inout_none_term_is_no_data",
+                "filter_w_not_term_is_no_data",
+                "filter_w_no_transitive_pair",
+                "filter_w_transitive_pair_any_src",
+                "filter_w_transitive_pair",
+                "filter_w_transitive_tag_no_pair",
+                "filter_w_transitive_tag_self_tgt",
+                "filter_w_transitive_tag_any_tgt",
+                "filter_w_pair_same_vars",
+                "filter_w_pair_not_same_vars",
+                "filter_w_pair_no_vars_not_same_vars",
+                "filter_w_pair_wildcard_not_same_vars",
+                "filter_w_pair_any_not_same_vars",
+                "filter_w_no_pair_not_same_vars",
+                "filter_not_childof_any",
+                "filter_w_inherited_id",
+                "filter_w_inherited_pair",
+                "filter_w_non_inherited_id",
+                "filter_w_non_inherited_pair",
+                "filter_w_first_rel",
+                "filter_w_first_rel_self",
+                "filter_w_first_rel_down",
+                "filter_w_first_rel_self_down",
+                "filter_w_first_rel_reflexive",
+                "filter_w_first_rel_reflexive_self",
+                "filter_w_first_rel_reflexive_down",
+                "filter_w_first_rel_reflexive_self_down",
+                "filter_w_first_rel_non_traversable",
                 "term_w_id",
                 "term_w_pair_id",
                 "term_w_pred_obj",
@@ -1264,7 +1299,9 @@
                 "one_term_w_first_var",
                 "one_term_w_second_var",
                 "one_term_w_first_var_entity_src",
-                "one_term_w_pair_w_0_entity"
+                "one_term_w_pair_w_0_entity",
+                "not_term",
+                "wildcard_term"
             ]
         }, {
             "id": "Query",
@@ -1581,6 +1618,8 @@
                 "get_target_from_base",
                 "get_target_from_2nd_base",
                 "get_target_from_base_w_pair_on_instance",
+                "get_childof_target_from_base",
+                "get_dontinherit_target_from_base",
                 "get_target_for_id_from_self",
                 "get_target_for_id_from_base",
                 "get_target_for_id_from_nested_base",
@@ -1836,6 +1875,7 @@
                 "on_set_2_pairs_w_multi_observer",
                 "on_remove_target_from_base_at_offset",
                 "on_remove_target_component_from_base_at_offset",
+                "filter_observer_after_observer",
                 "cache_test_1",
                 "cache_test_2",
                 "cache_test_3",
@@ -2310,7 +2350,9 @@
                 "get_mut_override",
                 "set_override",
                 "absent_get_mut_for_entity_w_tag",
-                "on_set_hook_before_on_add_for_existing_component"
+                "on_set_hook_before_on_add_for_existing_component",
+                "defer_2_sets_w_observer_same_component",
+                "defer_2_sets_w_observer_other_component"
             ]
         }, {
             "id": "SingleThreadStaging",

@@ -104,7 +104,7 @@ void FilterStr_three_terms_w_or() {
         .terms = {
             { TagA },
             { TagB, .oper = EcsOr },
-            { TagC, .oper = EcsOr }
+            { TagC }
         }
     }));
 
@@ -130,7 +130,7 @@ void FilterStr_three_terms_w_or_inout() {
         .terms = {
             { TagA },
             { TagB, .oper = EcsOr, .inout = EcsIn },
-            { TagC, .oper = EcsOr, .inout = EcsIn }
+            { TagC, .inout = EcsIn }
         }
     }));
 
@@ -157,7 +157,7 @@ void FilterStr_four_terms_three_w_or_inout() {
         .terms = {
             { TagA },
             { TagB, .oper = EcsOr, .inout = EcsIn },
-            { TagC, .oper = EcsOr, .inout = EcsIn },
+            { TagC, .inout = EcsIn },
             { TagD, .inout = EcsIn }
         }
     }));
@@ -430,6 +430,46 @@ void FilterStr_one_term_w_pair_w_0_entity() {
 
     char *str = ecs_filter_str(world, &f);
     test_str(str, "Rel(0,Tgt)");
+    ecs_os_free(str);
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world);
+}
+
+void FilterStr_not_term() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_TAG(world, TagA);
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter_init(world, &(ecs_filter_desc_t){
+        .storage = &f,
+        .terms = {{ TagA, .oper = EcsNot }}
+    }));
+
+    char *str = ecs_filter_str(world, &f);
+    test_str(str, "!TagA");
+    ecs_os_free(str);
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world);
+}
+
+void FilterStr_wildcard_term() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_TAG(world, TagA);
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter_init(world, &(ecs_filter_desc_t){
+        .storage = &f,
+        .terms = {{ EcsWildcard }}
+    }));
+
+    char *str = ecs_filter_str(world, &f);
+    test_str(str, "*");
     ecs_os_free(str);
 
     ecs_filter_fini(&f);

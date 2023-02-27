@@ -292,14 +292,15 @@ extern "C" {
 ////////////////////////////////////////////////////////////////////////////////
 
 #define EcsIterIsValid                 (1u << 0u)  /* Does iterator contain valid result */
-#define EcsIterIsFilter                (1u << 1u)  /* Is iterator filter (metadata only) */
+#define EcsIterNoData                  (1u << 1u)  /* Does iterator provide (component) data */
 #define EcsIterIsInstanced             (1u << 2u)  /* Is iterator instanced */
 #define EcsIterHasShared               (1u << 3u)  /* Does result have shared terms */
 #define EcsIterTableOnly               (1u << 4u)  /* Result only populates table */
 #define EcsIterEntityOptional          (1u << 5u)  /* Treat terms with entity subject as optional */
 #define EcsIterNoResults               (1u << 6u)  /* Iterator has no results */
 #define EcsIterIgnoreThis              (1u << 7u)  /* Only evaluate non-this terms */
-#define EcsIterMatchVar                (1u << 8u)
+#define EcsIterMatchVar                (1u << 8u)  
+#define EcsIterProfile                 (1u << 10u) /* Profile iterator performance */
 
 ////////////////////////////////////////////////////////////////////////////////
 //// Filter flags (used by ecs_filter_t::flags)
@@ -321,6 +322,7 @@ extern "C" {
 #define EcsFilterNoData                (1u << 7u)  /* When true, data fields won't be populated */
 #define EcsFilterIsInstanced           (1u << 8u)  /* Is filter instanced (see ecs_filter_desc_t) */
 #define EcsFilterPopulate              (1u << 9u)  /* Populate data, ignore non-matching fields */
+#define EcsIterProfile               (1u << 10u) /* Profile filter performance */
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3064,6 +3066,7 @@ typedef enum ecs_oper_kind_t {
     EcsNotFrom,       /**< Term must match none of the components from term id */
 } ecs_oper_kind_t;
 
+/* Term id flags  */
 #define EcsSelf                       (1u << 1) /**< Match on self */
 #define EcsUp                         (1u << 2) /**< Match by traversing upwards */
 #define EcsDown                       (1u << 3) /**< Match by traversing downwards (derived, cannot be set) */
@@ -3073,8 +3076,16 @@ typedef enum ecs_oper_kind_t {
 #define EcsIsVariable                 (1u << 7) /**< Term id is a variable */
 #define EcsIsEntity                   (1u << 8) /**< Term id is an entity */
 #define EcsFilter                     (1u << 9) /**< Prevent observer from triggering on term */
-
 #define EcsTraverseFlags              (EcsUp|EcsDown|EcsTraverseAll|EcsSelf|EcsCascade|EcsParent)
+
+/* Term flags discovered & set during filter creation. */
+#define EcsTermMatchAny    (1 << 0)
+#define EcsTermMatchAnySrc (1 << 1)
+#define EcsTermSrcFirstEq  (1 << 2)
+#define EcsTermSrcSecondEq (1 << 3)
+#define EcsTermTransitive  (1 << 4)
+#define EcsTermReflexive   (1 << 5)
+#define EcsTermIdInherited (1 << 6)
 
 /** Type that describes a single identifier in a term */
 typedef struct ecs_term_id_t {
@@ -3118,6 +3129,8 @@ struct ecs_term_t {
     int32_t field_index;        /**< Index of field for term in iterator */
     ecs_id_record_t *idr;       /**< Cached pointer to internal index */
 
+    ecs_flags16_t flags;        /**< Flags that help eval, set by ecs_filter_init */
+
     bool move;                  /**< Used by internals */
 };
 
@@ -3137,7 +3150,7 @@ struct ecs_filter_t {
 
     ecs_flags32_t flags;       /**< Filter flags */
     
-    char *variable_names[1];   /**< Array with variable names */
+    char *variable_names[1];   /**< Placeholder variable names array */
 
     /* Mixins */
     ecs_entity_t entity;       /**< Entity associated with filter (optional) */
@@ -3423,21 +3436,28 @@ typedef struct ecs_snapshot_iter_t {
     ecs_filter_t filter;
     ecs_vector_t *tables; /* ecs_table_leaf_t */
     int32_t index;
-} ecs_snapshot_iter_t;  
+} ecs_snapshot_iter_t;
+
+typedef struct ecs_rule_op_profile_t {
+    int32_t count[2]; /* 0 = enter, 1 = redo */
+} ecs_rule_op_profile_t;
 
 /** Rule-iterator specific data */
 typedef struct ecs_rule_iter_t {
     const ecs_rule_t *rule;
-    struct ecs_var_t *registers;         /* Variable storage (tables, entities) */
+    struct ecs_var_t *vars;              /* Variable storage */
+    const struct ecs_rule_var_t *rule_vars;
+    const struct ecs_rule_op_t *ops;
     struct ecs_rule_op_ctx_t *op_ctx;    /* Operation-specific state */
-    
-    int32_t *columns;                    /* Column indices */
-    
-    ecs_entity_t entity;                 /* Result in case of 1 entity */
+    uint64_t *written;
+
+#ifdef FLECS_DEBUG
+    ecs_rule_op_profile_t *profile;
+#endif
 
     bool redo;
-    int32_t op;
-    int32_t sp;
+    int16_t op;
+    int16_t sp;
 } ecs_rule_iter_t;
 
 /* Bits for tracking whether a cache was used/whether the array was allocated.
@@ -6410,6 +6430,23 @@ const ecs_type_hooks_t* ecs_get_hooks_id(
  */
 FLECS_API
 bool ecs_id_is_tag(
+    const ecs_world_t *world,
+    ecs_id_t id);
+
+/** Return whether represents a union.
+ * This operation returns whether the specified type represents a union. Only
+ * pair ids can be unions.
+ * 
+ * An id represents a union when:
+ * - The first element of the pair is EcsUnion/flecs::Union
+ * - The first element of the pair has EcsUnion/flecs::Union
+ *
+ * @param world The world.
+ * @param id The id.
+ * @return Whether the provided id represents a union.
+ */
+FLECS_API
+bool ecs_id_is_union(
     const ecs_world_t *world,
     ecs_id_t id);
 
@@ -13885,8 +13922,37 @@ bool ecs_rule_next_instanced(
  */
 FLECS_API
 char* ecs_rule_str(
-    ecs_rule_t *rule);
+    const ecs_rule_t *rule);
 
+/** Convert rule to string with profile.
+ * To use this you must set the EcsIterProfile flag on an iterator before 
+ * starting uteration:
+ *   it.flags |= EcsIterProfile 
+ *
+ * @param rule The rule.
+ * @return The string
+ */
+FLECS_API
+char* ecs_rule_str_w_profile(
+    const ecs_rule_t *rule,
+    const ecs_iter_t *it);
+
+/** Populate variables from key-value string.
+ * Convenience function to set rule variables from a key-value string separated
+ * by comma's. The string must have the followig format:
+ *   var_a: value, var_b: value
+ * 
+ * The key-value list may optionally be enclosed in parenthesis.
+ * 
+ * @param rule The rule.
+ * @param it The iterator for which to set the variables.
+ * @param expr The key-value expression.
+ */
+FLECS_API
+const char* ecs_rule_parse_vars(
+    ecs_rule_t *rule,
+    ecs_iter_t *it,
+    const char *expr);
 
 #ifdef __cplusplus
 }
@@ -14060,6 +14126,13 @@ const char* ecs_parse_ws(
 FLECS_API
 const char* ecs_parse_ws_eol(
     const char *ptr);
+
+/** Utility function to parse an identifier */
+const char* ecs_parse_identifier(
+    const char *name,
+    const char *expr,
+    const char *ptr,
+    char *token_out);
 
 /** Parse digit.
  * This function will parse until the first non-digit character is found. The
@@ -15249,6 +15322,18 @@ struct string_view : string {
 #define FLECS_ENUM_MAX(T) _::to_constant<T, 128>::value
 #define FLECS_ENUM_MAX_COUNT (FLECS_ENUM_MAX(int) + 1)
 
+#ifndef FLECS_CPP_ENUM_REFLECTION_SUPPORT
+#if !defined(__clang__) && defined(__GNUC__)
+#if __GNUC__ > 7 || (__GNUC__ == 7 && __GNUC_MINOR__ >= 5)
+#define FLECS_CPP_ENUM_REFLECTION_SUPPORT 1
+#else
+#define FLECS_CPP_ENUM_REFLECTION_SUPPORT 0
+#endif
+#else
+#define FLECS_CPP_ENUM_REFLECTION_SUPPORT 1
+#endif
+#endif
+
 namespace flecs {
 
 /** Int to enum */
@@ -15389,9 +15474,8 @@ struct enum_type {
     }
 
     void init(flecs::world_t *world, flecs::entity_t id) {
-#if !defined(__clang__) && defined(__GNUC__)
-        ecs_assert(__GNUC__ > 7 || (__GNUC__ == 7 && __GNUC_MINOR__ >= 5), 
-            ECS_UNSUPPORTED, "enum component types require gcc 7.5 or higher");
+#if !FLECS_CPP_ENUM_REFLECTION_SUPPORT
+        ecs_abort(ECS_UNSUPPORTED, "enum reflection requires gcc 7.5 or higher")
 #endif
 
         ecs_log_push();
@@ -22217,6 +22301,19 @@ struct entity : entity_builder<entity>
         ecs_delete(m_world, m_id);
     }
 
+    /** Return entity as entity_view.
+     * This returns an entity_view instance for the entity which is a readonly
+     * version of the entity class.
+     * 
+     * This is similar to a regular upcast, except that this method ensures that
+     * the entity_view instance is instantiated with a world vs. a stage, which
+     * a regular upcast does not guarantee.
+     */
+    flecs::entity_view view() const {
+        return flecs::entity_view(
+            const_cast<flecs::world_t*>(ecs_get_world(m_world)), m_id);
+    }
+
     /** Entity id 0.
      * This function is useful when the API must provide an entity that
      * belongs to a world, but the entity id is 0.
@@ -22442,7 +22539,7 @@ struct each_invoker : public invoker {
 
     using Terms = typename term_ptrs<Components ...>::array;
 
-    template < if_not_t< is_same< void(Func), void(Func)& >::value > = 0>
+    template < if_not_t< is_same< decay_t<Func>, decay_t<Func>& >::value > = 0>
     explicit each_invoker(Func&& func) noexcept 
         : m_func(FLECS_MOV(func)) { }
 
@@ -22602,7 +22699,7 @@ private:
     using Terms = typename term_ptrs<Components ...>::array;
 
 public:
-    template < if_not_t< is_same< void(Func), void(Func)& >::value > = 0>
+    template < if_not_t< is_same< decay_t<Func>, decay_t<Func>& >::value > = 0>
     explicit iter_invoker(Func&& func) noexcept 
         : m_func(FLECS_MOV(func)) { }
 
@@ -23399,7 +23496,6 @@ template <typename T>
 struct cpp_type_impl {
     // Initialize component identifier
     static void init(
-        world_t* world, 
         entity_t entity, 
         bool allow_tag = true) 
     {
@@ -23409,7 +23505,6 @@ struct cpp_type_impl {
 
         // If an identifier was already set, check for consistency
         if (s_id) {
-            ecs_assert(s_name.c_str() != nullptr, ECS_INTERNAL_ERROR, NULL);
             ecs_assert(s_id == entity, ECS_INCONSISTENT_COMPONENT_ID, 
                 type_name<T>());
             ecs_assert(allow_tag == s_allow_tag, ECS_INVALID_PARAMETER, NULL);
@@ -23421,9 +23516,7 @@ struct cpp_type_impl {
 
         // Component wasn't registered yet, set the values. Register component
         // name as the fully qualified flecs path.
-        char *path = ecs_get_fullpath(world, entity);
         s_id = entity;
-        s_name = flecs::string(path);
         s_allow_tag = allow_tag;
         s_size = sizeof(T);
         s_alignment = alignof(T);
@@ -23452,7 +23545,7 @@ struct cpp_type_impl {
         // across more than one binary), or if the id does not exists in the 
         // world (indicating a multi-world application), register it. */
         if (!s_id || (world && !ecs_exists(world, s_id))) {
-            init(world, s_id ? s_id : id, allow_tag);
+            init(s_id ? s_id : id, allow_tag);
 
             ecs_assert(!id || s_id == id, ECS_INTERNAL_ERROR, NULL);
 
@@ -23471,7 +23564,9 @@ struct cpp_type_impl {
             s_id = entity;
 
             // If component is enum type, register constants
+            #if FLECS_CPP_ENUM_REFLECTION_SUPPORT            
             _::init_enum<T>(world, entity);
+            #endif
         }
 
         // By now the identifier must be valid and known with the world.
@@ -23526,20 +23621,6 @@ struct cpp_type_impl {
         return s_id;
     }
 
-    // Obtain a component name
-    static const char* name(world_t *world = nullptr) {
-        // If no id has been registered yet, do it now.
-        if (!s_id) {
-            id(world);
-        }
-
-        // By now we should have a valid identifier
-        ecs_assert(s_id != 0, ECS_INTERNAL_ERROR, NULL);
-
-        // If the id is set, the name should also have been set
-        return s_name.c_str();
-    }
-
     // Return the size of a component.
     static size_t size() {
         ecs_assert(s_id != 0, ECS_INTERNAL_ERROR, NULL);
@@ -23573,11 +23654,9 @@ struct cpp_type_impl {
         s_size = 0;
         s_alignment = 0;
         s_allow_tag = true;
-        s_name.clear();
     }
 
     static entity_t s_id;
-    static flecs::string s_name;
     static size_t s_size;
     static size_t s_alignment;
     static bool s_allow_tag;
@@ -23586,7 +23665,6 @@ struct cpp_type_impl {
 
 // Global templated variables that hold component identifier and other info
 template <typename T> entity_t      cpp_type_impl<T>::s_id;
-template <typename T> flecs::string cpp_type_impl<T>::s_name;
 template <typename T> size_t        cpp_type_impl<T>::s_size;
 template <typename T> size_t        cpp_type_impl<T>::s_alignment;
 template <typename T> bool          cpp_type_impl<T>::s_allow_tag( true );
@@ -26719,7 +26797,7 @@ flecs::entity import(world& world) {
 
         /* Module is registered with world, initialize static data */
         if (m) {
-            _::cpp_type<T>::init(world, m, false);
+            _::cpp_type<T>::init(m, false);
         
         /* Module is not yet registered, register it now */
         } else {
@@ -27779,7 +27857,7 @@ inline void init(flecs::world& world) {
     // specific types.
 
     if (!flecs::is_same<i32_t, iptr_t>() && !flecs::is_same<i64_t, iptr_t>()) {
-        flecs::_::cpp_type<iptr_t>::init(world, flecs::Iptr, true);
+        flecs::_::cpp_type<iptr_t>::init(flecs::Iptr, true);
         ecs_assert(flecs::type_id<iptr_t>() == flecs::Iptr, 
             ECS_INTERNAL_ERROR, NULL);
         // Remove symbol to prevent validation errors, as it doesn't match with 
@@ -27788,7 +27866,7 @@ inline void init(flecs::world& world) {
     }
 
     if (!flecs::is_same<u32_t, uptr_t>() && !flecs::is_same<u64_t, uptr_t>()) {
-        flecs::_::cpp_type<uptr_t>::init(world, flecs::Uptr, true);
+        flecs::_::cpp_type<uptr_t>::init(flecs::Uptr, true);
         ecs_assert(flecs::type_id<uptr_t>() == flecs::Uptr, 
             ECS_INTERNAL_ERROR, NULL);
         // Remove symbol to prevent validation errors, as it doesn't match with 
@@ -27856,7 +27934,7 @@ inline flecs::entity world::vector(flecs::entity_t elem_id) {
 
 template <typename T>
 inline flecs::entity world::vector() {
-    return this->vector(_::cpp_type<T>::id());
+    return this->vector(_::cpp_type<T>::id(m_world));
 }
 
 } // namespace flecs

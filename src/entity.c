@@ -3018,10 +3018,11 @@ void flecs_move_ptr_w_id(
     const ecs_type_info_t *ti = dst.ti;
     ecs_assert(ti != NULL, ECS_INTERNAL_ERROR, NULL);
     ecs_move_t move;
-    if (cmd_kind == EcsOpEmplace) {
-        move = ti->hooks.move_ctor;
+    if (cmd_kind != EcsOpEmplace) {
+        /* ctor will have happened by get_mut */
+        move = ti->hooks.move_dtor;
     } else {
-        move = ti->hooks.move;
+        move = ti->hooks.ctor_move_dtor;
     }
     if (move) {
         move(dst.ptr, ptr, 1, ti);
@@ -3229,7 +3230,11 @@ ecs_entity_t ecs_get_target(
     }
 
     ecs_id_t wc = ecs_pair(rel, EcsWildcard);
-    ecs_table_record_t *tr = flecs_table_record_get(world, table, wc);
+    ecs_id_record_t *idr = flecs_id_record_get(world, wc);
+    const ecs_table_record_t *tr = NULL;
+    if (idr) {
+        tr = flecs_id_record_get_table(idr, table);
+    }
     if (!tr) {
         if (table->flags & EcsTableHasUnion) {
             wc = ecs_pair(EcsUnion, rel);
@@ -3242,7 +3247,12 @@ ecs_entity_t ecs_get_target(
                 
             }
         }
-        goto look_in_base;
+
+        if (!idr || !(idr->flags & EcsIdDontInherit)) {
+            goto look_in_base;
+        } else {
+            return 0;
+        }
     }
 
     if (index >= tr->count) {
@@ -3736,6 +3746,24 @@ bool ecs_id_is_tag(
     return false;
 }
 
+bool ecs_id_is_union(
+    const ecs_world_t *world,
+    ecs_id_t id)
+{
+    if (!ECS_IS_PAIR(id)) {
+        return false;
+    } else if (ECS_PAIR_FIRST(id) == EcsUnion) {
+        return true;
+    } else {
+        ecs_entity_t first = ecs_pair_first(world, id);
+        if (ecs_has_id(world, first, EcsUnion)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 int32_t ecs_count_id(
     const ecs_world_t *world,
     ecs_entity_t id)
@@ -3752,7 +3780,7 @@ int32_t ecs_count_id(
         .src.flags = EcsSelf
     });
 
-    it.flags |= EcsIterIsFilter;
+    it.flags |= EcsIterNoData;
     it.flags |= EcsIterEvalTables;
 
     while (ecs_term_next(&it)) {
@@ -4146,7 +4174,6 @@ void flecs_cmd_batch_for_entity(
         case EcsOpAddModified:
             /* Add is batched, but keep Modified */
             cmd->kind = EcsOpModified;
-            kind = EcsOpAdd;
 
             /* fallthrough */
         case EcsOpAdd:

@@ -19,7 +19,7 @@ void Filter_filter_1_term() {
     test_int(f.terms[0].inout, EcsInOutDefault);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, TagA);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, EcsThis);
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[0].src.trav, EcsIsA);
@@ -48,7 +48,7 @@ void Filter_filter_1_term_component() {
     test_int(f.terms[0].inout, EcsInOutDefault);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, ecs_id(Position));
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, EcsThis);
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[0].src.trav, EcsIsA);
@@ -78,7 +78,7 @@ void Filter_filter_2_terms() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, TagA);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, EcsThis);
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[0].src.trav, EcsIsA);
@@ -87,7 +87,7 @@ void Filter_filter_2_terms() {
     test_int(f.terms[1].oper, EcsAnd);
     test_int(f.terms[1].field_index, 1);
     test_int(f.terms[1].first.id, TagB);
-    test_int(f.terms[1].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[1].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[1].src.id, EcsThis);
     test_int(f.terms[1].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[1].src.trav, EcsIsA);
@@ -118,7 +118,7 @@ void Filter_filter_3_terms() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, TagA);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, EcsThis);
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[0].src.trav, EcsIsA);
@@ -127,7 +127,7 @@ void Filter_filter_3_terms() {
     test_int(f.terms[1].oper, EcsAnd);
     test_int(f.terms[1].field_index, 1);
     test_int(f.terms[1].first.id, TagB);
-    test_int(f.terms[1].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[1].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[1].src.id, EcsThis);
     test_int(f.terms[1].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[1].src.trav, EcsIsA);
@@ -136,7 +136,7 @@ void Filter_filter_3_terms() {
     test_int(f.terms[2].oper, EcsAnd);
     test_int(f.terms[2].field_index, 2);
     test_int(f.terms[2].first.id, TagC);
-    test_int(f.terms[2].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[2].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[2].src.id, EcsThis);
     test_int(f.terms[2].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[2].src.trav, EcsIsA);
@@ -156,7 +156,7 @@ void Filter_filter_3_terms_w_or() {
     ecs_filter_t f = ECS_FILTER_INIT;
     ecs_filter_init(world, &(ecs_filter_desc_t){
         .storage = &f,
-        .terms = {{TagA}, {TagB, .oper = EcsOr}, {TagC, .oper = EcsOr}}
+        .terms = {{TagA}, {TagB, .oper = EcsOr}, {TagC }}
     });
 
     test_int(f.term_count, 3);
@@ -167,7 +167,7 @@ void Filter_filter_3_terms_w_or() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, TagA);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, EcsThis);
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[0].src.trav, EcsIsA);
@@ -176,16 +176,16 @@ void Filter_filter_3_terms_w_or() {
     test_int(f.terms[1].oper, EcsOr);
     test_int(f.terms[1].field_index, 1);
     test_int(f.terms[1].first.id, TagB);
-    test_int(f.terms[1].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[1].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[1].src.id, EcsThis);
     test_int(f.terms[1].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[1].src.trav, EcsIsA);
 
     test_int(f.terms[2].id, TagC);
-    test_int(f.terms[2].oper, EcsOr);
+    test_int(f.terms[2].oper, EcsAnd);
     test_int(f.terms[2].field_index, 1);
     test_int(f.terms[2].first.id, TagC);
-    test_int(f.terms[2].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[2].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[2].src.id, EcsThis);
     test_int(f.terms[2].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[2].src.trav, EcsIsA);
@@ -206,7 +206,7 @@ void Filter_filter_4_terms_w_or_at_1() {
     ecs_filter_t f = ECS_FILTER_INIT;
     ecs_filter_init(world, &(ecs_filter_desc_t){
         .storage = &f,
-        .terms = {{TagA}, {TagB, .oper = EcsOr}, {TagC, .oper = EcsOr}, {TagD}}
+        .terms = {{TagA}, {TagB, .oper = EcsOr}, {TagC}, {TagD}}
     });
 
     test_int(f.term_count, 4);
@@ -217,7 +217,7 @@ void Filter_filter_4_terms_w_or_at_1() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, TagA);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, EcsThis);
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[0].src.trav, EcsIsA);
@@ -226,16 +226,16 @@ void Filter_filter_4_terms_w_or_at_1() {
     test_int(f.terms[1].oper, EcsOr);
     test_int(f.terms[1].field_index, 1);
     test_int(f.terms[1].first.id, TagB);
-    test_int(f.terms[1].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[1].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[1].src.id, EcsThis);
     test_int(f.terms[1].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[1].src.trav, EcsIsA);
 
     test_int(f.terms[2].id, TagC);
-    test_int(f.terms[2].oper, EcsOr);
+    test_int(f.terms[2].oper, EcsAnd);
     test_int(f.terms[2].field_index, 1);
     test_int(f.terms[2].first.id, TagC);
-    test_int(f.terms[2].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[2].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[2].src.id, EcsThis);
     test_int(f.terms[2].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[2].src.trav, EcsIsA);
@@ -244,7 +244,7 @@ void Filter_filter_4_terms_w_or_at_1() {
     test_int(f.terms[3].oper, EcsAnd);
     test_int(f.terms[3].field_index, 2);
     test_int(f.terms[3].first.id, TagD);
-    test_int(f.terms[3].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[3].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[3].src.id, EcsThis);
     test_int(f.terms[3].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[3].src.trav, EcsIsA);
@@ -270,7 +270,7 @@ void Filter_filter_1_term_wildcard() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, EcsWildcard);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsVariable);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsVariable);
     test_int(f.terms[0].src.id, EcsThis);
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[0].src.trav, EcsIsA);
@@ -297,7 +297,7 @@ void Filter_filter_1_term_any() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, EcsAny);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsVariable);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsVariable);
     test_int(f.terms[0].src.id, EcsThis);
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[0].src.trav, EcsIsA);
@@ -328,7 +328,7 @@ void Filter_filter_1_term_same_subj_obj() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, Rel);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, Foo);
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsEntity);
     test_int(f.terms[0].src.trav, EcsIsA);
@@ -377,7 +377,7 @@ void Filter_filter_1_term_acyclic_reflexive_same_subj_obj() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, Rel);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, Foo);
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsEntity);
     test_int(f.terms[0].src.trav, EcsIsA);
@@ -412,7 +412,7 @@ void Filter_filter_1_term_same_subj_obj_var() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, Rel);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_str(f.terms[0].src.name, "X");
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[0].src.trav, EcsIsA);
@@ -467,7 +467,7 @@ void Filter_filter_1_term_acyclic_reflexive_same_subj_obj_var() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, Rel);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_str(f.terms[0].src.name, "X");
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[0].src.trav, EcsIsA);
@@ -519,7 +519,7 @@ void Filter_filter_1_term_dont_inherit_default_set() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, Tag);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, EcsThis);
     test_int(f.terms[0].src.flags, EcsSelf|EcsIsVariable);
     test_int(f.terms[0].src.trav, 0);
@@ -548,7 +548,7 @@ void Filter_filter_1_term_dont_inherit_pair_default_set() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, Rel);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, EcsThis);
     test_int(f.terms[0].src.flags, EcsSelf|EcsIsVariable);
     test_int(f.terms[0].src.trav, 0);
@@ -577,7 +577,7 @@ void Filter_filter_1_term_cascade_implicit_isa() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, Tag);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, EcsThis);
     test_int(f.terms[0].src.flags, EcsUp|EcsCascade|EcsIsVariable);
     test_int(f.terms[0].src.trav, EcsIsA);
@@ -609,7 +609,7 @@ void Filter_filter_1_term_cascade_isa() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, Tag);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, EcsThis);
     test_int(f.terms[0].src.flags, EcsUp|EcsCascade|EcsIsVariable);
     test_int(f.terms[0].src.trav, EcsIsA);
@@ -641,7 +641,7 @@ void Filter_filter_1_term_cascade_childof() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, Tag);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, EcsThis);
     test_int(f.terms[0].src.flags, EcsUp|EcsCascade|EcsIsVariable);
     test_int(f.terms[0].src.trav, EcsChildOf);
@@ -661,7 +661,7 @@ void Filter_filter_1_term_cascade_down() {
         .storage = &f,
         .terms = {{ 
             .id = Tag, 
-            .src.trav = EcsChildOf, .src.flags = EcsCascade|EcsDown
+            .src.trav = EcsChildOf, .src.flags = EcsCascade
         }}
     });
     test_assert(r != NULL);
@@ -673,9 +673,9 @@ void Filter_filter_1_term_cascade_down() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, Tag);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, EcsThis);
-    test_int(f.terms[0].src.flags, EcsDown|EcsCascade|EcsIsVariable);
+    test_int(f.terms[0].src.flags, EcsUp|EcsCascade|EcsIsVariable);
     test_int(f.terms[0].src.trav, EcsChildOf);
 
     ecs_filter_fini(&f);
@@ -705,7 +705,7 @@ void Filter_filter_1_term_optional_only() {
     test_int(f.terms[0].oper, EcsOptional);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, Tag);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, EcsThis);
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[0].src.trav, EcsIsA);
@@ -737,7 +737,7 @@ void Filter_filter_1_term_transitive_pair() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, Rel);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, EcsThis);
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[0].src.trav, EcsIsA);
@@ -773,7 +773,7 @@ void Filter_filter_1_term_transitive_pair_explicit_self_tgt() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, Rel);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, EcsThis);
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[0].src.trav, EcsIsA);
@@ -859,7 +859,7 @@ void Filter_filter_1_variable_as_subj() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, Foo);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, Foo);
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsEntity);
     test_int(f.terms[0].src.trav, EcsIsA);
@@ -891,7 +891,7 @@ void Filter_filter_w_src_var() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, Foo);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_str(f.terms[0].src.name, "Var");
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[0].src.trav, EcsIsA);
@@ -920,7 +920,7 @@ void Filter_filter_w_first_var() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_str(f.terms[0].first.name, "Var");
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsVariable);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsVariable);
     test_int(f.terms[0].src.id, EcsThis);
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[0].src.trav, EcsIsA);
@@ -952,7 +952,7 @@ void Filter_filter_w_second_var() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, Foo);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, EcsThis);
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[0].src.trav, EcsIsA);
@@ -986,7 +986,7 @@ void Filter_filter_1_variable_as_obj() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, Foo);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, EcsThis);
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[0].src.trav, EcsIsA);
@@ -1009,7 +1009,7 @@ void Filter_filter_2_terms_or_w_dontinherit() {
     ecs_filter_t f = ECS_FILTER_INIT;
     test_assert(NULL != ecs_filter(world, {
         .storage = &f,
-        .terms = {{ TagA, .oper = EcsOr }, { TagB, .oper = EcsOr }}
+        .terms = {{ TagA, .oper = EcsOr }, { TagB }}
     }));
 
     test_int(f.term_count, 2);
@@ -1020,16 +1020,16 @@ void Filter_filter_2_terms_or_w_dontinherit() {
     test_int(f.terms[0].oper, EcsOr);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, TagA);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, EcsThis);
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[0].src.trav, EcsIsA);
 
     test_int(f.terms[1].id, TagB);
-    test_int(f.terms[1].oper, EcsOr);
+    test_int(f.terms[1].oper, EcsAnd);
     test_int(f.terms[1].field_index, 0);
     test_int(f.terms[1].first.id, TagB);
-    test_int(f.terms[1].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[1].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[1].src.id, EcsThis);
     test_int(f.terms[1].src.flags, EcsSelf|EcsIsVariable);
     test_int(f.terms[1].src.trav, 0);
@@ -1051,7 +1051,7 @@ void Filter_filter_2_terms_or_w_both_dontinherit() {
     ecs_filter_t f = ECS_FILTER_INIT;
     test_assert(NULL != ecs_filter(world, {
         .storage = &f,
-        .terms = {{ TagA, .oper = EcsOr }, { TagB, .oper = EcsOr }}
+        .terms = {{ TagA, .oper = EcsOr }, { TagB }}
     }));
 
     test_int(f.term_count, 2);
@@ -1062,16 +1062,16 @@ void Filter_filter_2_terms_or_w_both_dontinherit() {
     test_int(f.terms[0].oper, EcsOr);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, TagA);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, EcsThis);
     test_int(f.terms[0].src.flags, EcsSelf|EcsIsVariable);
     test_int(f.terms[0].src.trav, 0);
 
     test_int(f.terms[1].id, TagB);
-    test_int(f.terms[1].oper, EcsOr);
+    test_int(f.terms[1].oper, EcsAnd);
     test_int(f.terms[1].field_index, 0);
     test_int(f.terms[1].first.id, TagB);
-    test_int(f.terms[1].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[1].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[1].src.id, EcsThis);
     test_int(f.terms[1].src.flags, EcsSelf|EcsIsVariable);
     test_int(f.terms[1].src.trav, 0);
@@ -1102,7 +1102,7 @@ void Filter_filter_w_pair_id() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, Rel);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, EcsThis);
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[0].src.trav, EcsIsA);
@@ -1135,7 +1135,7 @@ void Filter_filter_w_pred_obj() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, Rel);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, EcsThis);
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[0].second.id, Tgt);
@@ -1168,7 +1168,7 @@ void Filter_filter_w_pair_id_and_subj() {
     test_int(f.terms[0].oper, EcsAnd);
     test_int(f.terms[0].field_index, 0);
     test_int(f.terms[0].first.id, Rel);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, Src);
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsEntity);
     test_int(f.terms[0].second.id, Tgt);
@@ -1191,7 +1191,7 @@ void Filter_term_w_id() {
     test_assert(ecs_term_finalize(world, &term) == 0);
     test_int(term.id, Tag);
     test_int(term.first.id, Tag);
-    test_int(term.first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(term.first.flags, EcsSelf|EcsIsEntity);
     test_int(term.src.id, EcsThis);
     test_int(term.src.flags, EcsSelf|EcsUp|EcsIsVariable);
 
@@ -1214,7 +1214,7 @@ void Filter_term_w_pair_id() {
     test_int(term.id, pair);
     test_int(term.id_flags, ECS_PAIR);
     test_int(term.first.id, Rel);
-    test_int(term.first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(term.first.flags, EcsSelf|EcsIsEntity);
     test_int(term.src.id, EcsThis);
     test_int(term.src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(term.second.id, Tgt);
@@ -1240,7 +1240,7 @@ void Filter_term_w_pred_obj() {
     test_int(term.id, pair);
     test_int(term.id_flags, ECS_PAIR);
     test_int(term.first.id, Rel);
-    test_int(term.first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(term.first.flags, EcsSelf|EcsIsEntity);
     test_int(term.src.id, EcsThis);
     test_int(term.src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(term.second.id, Tgt);
@@ -1266,7 +1266,7 @@ void Filter_term_w_pair_finalize_twice() {
     test_int(term.id, pair);
     test_int(term.id_flags, ECS_PAIR);
     test_int(term.first.id, Rel);
-    test_int(term.first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(term.first.flags, EcsSelf|EcsIsEntity);
     test_int(term.src.id, EcsThis);
     test_int(term.src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(term.second.id, Tgt);
@@ -1276,7 +1276,7 @@ void Filter_term_w_pair_finalize_twice() {
     test_int(term.id, pair);
     test_int(term.id_flags, ECS_PAIR);
     test_int(term.first.id, Rel);
-    test_int(term.first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(term.first.flags, EcsSelf|EcsIsEntity);
     test_int(term.src.id, EcsThis);
     test_int(term.src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(term.second.id, Tgt);
@@ -1303,7 +1303,7 @@ void Filter_term_w_role() {
     test_int(term.id, Tag | ECS_OVERRIDE);
     test_int(term.id_flags, ECS_OVERRIDE);
     test_int(term.first.id, Tag);
-    test_int(term.first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(term.first.flags, EcsSelf|EcsIsEntity);
     test_int(term.src.id, EcsThis);
     test_int(term.src.flags, EcsSelf|EcsUp|EcsIsVariable);
 
@@ -1325,7 +1325,7 @@ void Filter_term_w_pred_role() {
     test_int(term.id, Tag | ECS_OVERRIDE);
     test_int(term.id_flags, ECS_OVERRIDE);
     test_int(term.first.id, Tag);
-    test_int(term.first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(term.first.flags, EcsSelf|EcsIsEntity);
     test_int(term.src.id, EcsThis);
     test_int(term.src.flags, EcsSelf|EcsUp|EcsIsVariable);
 
@@ -1345,7 +1345,7 @@ void Filter_term_w_self() {
     test_assert(ecs_term_finalize(world, &term) == 0);
     test_int(term.id, Tag);
     test_int(term.first.id, Tag);
-    test_int(term.first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(term.first.flags, EcsSelf|EcsIsEntity);
     test_int(term.src.id, EcsThis);
     test_int(term.src.flags, EcsSelf|EcsIsVariable);
 
@@ -1365,7 +1365,7 @@ void Filter_term_w_superset() {
     test_assert(ecs_term_finalize(world, &term) == 0);
     test_int(term.id, Tag);
     test_int(term.first.id, Tag);
-    test_int(term.first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(term.first.flags, EcsSelf|EcsIsEntity);
     test_int(term.src.id, EcsThis);
     test_int(term.src.flags, EcsUp|EcsIsVariable);
     test_int(term.src.trav, EcsIsA);
@@ -1386,7 +1386,7 @@ void Filter_term_w_subset() {
     test_assert(ecs_term_finalize(world, &term) == 0);
     test_int(term.id, Tag);
     test_int(term.first.id, Tag);
-    test_int(term.first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(term.first.flags, EcsSelf|EcsIsEntity);
     test_int(term.src.id, EcsThis);
     test_int(term.src.flags, EcsDown|EcsIsVariable);
     test_int(term.src.trav, EcsIsA);
@@ -1407,7 +1407,7 @@ void Filter_term_w_self_superset() {
     test_assert(ecs_term_finalize(world, &term) == 0);
     test_int(term.id, Tag);
     test_int(term.first.id, Tag);
-    test_int(term.first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(term.first.flags, EcsSelf|EcsIsEntity);
     test_int(term.src.id, EcsThis);
     test_int(term.src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(term.src.trav, EcsIsA);
@@ -1429,7 +1429,7 @@ void Filter_term_w_superset_custom_relation() {
     test_assert(ecs_term_finalize(world, &term) == 0);
     test_int(term.id, Tag);
     test_int(term.first.id, Tag);
-    test_int(term.first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(term.first.flags, EcsSelf|EcsIsEntity);
     test_int(term.src.id, EcsThis);
     test_int(term.src.flags, EcsUp|EcsIsVariable);
     test_int(term.src.trav, EcsChildOf);
@@ -1451,7 +1451,7 @@ void Filter_term_w_self_superset_custom_relation() {
     test_assert(ecs_term_finalize(world, &term) == 0);
     test_int(term.id, Tag);
     test_int(term.first.id, Tag);
-    test_int(term.first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(term.first.flags, EcsSelf|EcsIsEntity);
     test_int(term.src.id, EcsThis);
     test_int(term.src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(term.src.trav, EcsChildOf);
@@ -1472,7 +1472,7 @@ void Filter_filter_1_w_pred_name() {
     test_int(term.id, Tag);
     test_int(term.first.id, Tag);
     test_assert(term.first.name ==  NULL);
-    test_int(term.first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(term.first.flags, EcsSelf|EcsIsEntity);
     test_int(term.src.id, EcsThis);
     test_int(term.src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(term.src.trav, EcsIsA);
@@ -1516,7 +1516,7 @@ void Filter_filter_1_w_subj_name() {
     test_assert(ecs_term_finalize(world, &term) == 0);
     test_int(term.id, Tag);
     test_int(term.first.id, Tag);
-    test_int(term.first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(term.first.flags, EcsSelf|EcsIsEntity);
     test_int(term.src.id, Src);
     test_assert(term.src.name ==  NULL);
     test_int(term.src.flags, EcsSelf|EcsUp|EcsIsEntity);
@@ -1539,7 +1539,7 @@ void Filter_filter_1_w_obj_name() {
     test_assert(ecs_term_finalize(world, &term) == 0);
     test_int(term.id, ecs_pair(Tag, Tgt));
     test_int(term.first.id, Tag);
-    test_int(term.first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(term.first.flags, EcsSelf|EcsIsEntity);
     test_int(term.src.id, EcsThis);
     test_int(term.src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(term.src.trav, EcsIsA);
@@ -1563,7 +1563,7 @@ void Filter_filter_w_this_implicit_variable() {
     test_assert(ecs_term_finalize(world, &term) == 0);
     test_int(term.id, Tag);
     test_int(term.first.id, Tag);
-    test_int(term.first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(term.first.flags, EcsSelf|EcsIsEntity);
     test_int(term.src.id, EcsThis);
     test_int(term.src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(term.src.trav, EcsIsA);
@@ -1585,7 +1585,7 @@ void Filter_filter_w_this_explicit_entity() {
     test_assert(ecs_term_finalize(world, &term) == 0);
     test_int(term.id, Tag);
     test_int(term.first.id, Tag);
-    test_int(term.first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(term.first.flags, EcsSelf|EcsIsEntity);
     test_int(term.src.id, EcsThis);
     test_int(term.src.flags, EcsSelf|EcsUp|EcsIsEntity);
     test_int(term.src.trav, EcsIsA);
@@ -1606,7 +1606,7 @@ void Filter_filter_w_first_this_implicit_variable() {
     test_assert(ecs_term_finalize(world, &term) == 0);
     test_int(term.id, EcsWildcard);
     test_int(term.first.id, EcsThis);
-    test_int(term.first.flags, EcsSelf|EcsDown|EcsIsVariable);
+    test_int(term.first.flags, EcsSelf|EcsIsVariable);
     test_int(term.src.id, Src);
     test_int(term.src.flags, EcsSelf|EcsUp|EcsIsEntity);
     test_int(term.src.trav, EcsIsA);
@@ -1628,7 +1628,7 @@ void Filter_filter_w_first_this_explicit_entity() {
     test_assert(ecs_term_finalize(world, &term) == 0);
     test_int(term.id, EcsThis);
     test_int(term.first.id, EcsThis);
-    test_int(term.first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(term.first.flags, EcsSelf|EcsIsEntity);
     test_int(term.src.id, Src);
     test_int(term.src.flags, EcsSelf|EcsUp|EcsIsEntity);
     test_int(term.src.trav, EcsIsA);
@@ -1649,7 +1649,7 @@ void Filter_filter_w_second_this_implicit_variable() {
     test_assert(ecs_term_finalize(world, &term) == 0);
     test_int(term.id, ecs_pair(Tag, EcsWildcard));
     test_int(term.first.id, Tag);
-    test_int(term.first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(term.first.flags, EcsSelf|EcsIsEntity);
     test_int(term.src.id, EcsThis);
     test_int(term.src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(term.src.trav, EcsIsA);
@@ -1673,7 +1673,7 @@ void Filter_filter_w_second_this_explicit_entity() {
     test_assert(ecs_term_finalize(world, &term) == 0);
     test_int(term.id, ecs_pair(Tag, EcsThis));
     test_int(term.first.id, Tag);
-    test_int(term.first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(term.first.flags, EcsSelf|EcsIsEntity);
     test_int(term.src.id, EcsThis);
     test_int(term.src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(term.src.trav, EcsIsA);
@@ -1697,7 +1697,7 @@ void Filter_filter_w_this_variable_name() {
     test_assert(ecs_term_finalize(world, &term) == 0);
     test_int(term.id, Tag);
     test_int(term.first.id, Tag);
-    test_int(term.first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(term.first.flags, EcsSelf|EcsIsEntity);
     test_int(term.src.id, EcsThis);
     test_int(term.src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(term.src.trav, EcsIsA);
@@ -1719,7 +1719,7 @@ void Filter_filter_w_0_source() {
     test_assert(ecs_term_finalize(world, &term) == 0);
     test_int(term.id, Tag);
     test_int(term.first.id, Tag);
-    test_int(term.first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(term.first.flags, EcsSelf|EcsIsEntity);
     test_int(term.src.id, 0);
     test_int(term.src.flags, EcsIsEntity);
     test_int(term.src.trav, 0);
@@ -1758,21 +1758,21 @@ void Filter_filter_2_terms_w_or() {
     ecs_filter_t f = ECS_FILTER_INIT;
     test_assert(NULL != ecs_filter_init(world, &(ecs_filter_desc_t){
         .storage = &f,
-        .terms = {{TagA, .oper = EcsOr}, {TagB, .oper = EcsOr}}
+        .terms = {{TagA, .oper = EcsOr}, {TagB }}
     }));
 
     test_int(f.terms[0].oper, EcsOr);
     test_int(f.terms[0].id, TagA);
     test_int(f.terms[0].first.id, TagA);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, EcsThis);
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[0].src.trav, EcsIsA);
 
-    test_int(f.terms[1].oper, EcsOr);
+    test_int(f.terms[1].oper, EcsAnd);
     test_int(f.terms[1].id, TagB);
     test_int(f.terms[1].first.id, TagB);
-    test_int(f.terms[1].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[1].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[1].src.id, EcsThis);
     test_int(f.terms[1].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f.terms[1].src.trav, EcsIsA);
@@ -1793,7 +1793,7 @@ void Filter_filter_2_terms_w_or_mixed_src_flags() {
         .storage = &f,
         .terms = {
             {TagA, .oper = EcsOr}, 
-            {TagB, .oper = EcsOr, .src.flags = EcsUp}
+            {TagB, .oper = EcsAnd, .src.flags = EcsUp}
         }
     }));
 
@@ -1880,22 +1880,22 @@ void Filter_filter_2_terms_w_or_same_src_w_id_and_name() {
         .storage = &f,
         .terms = {
             {TagA, .oper = EcsOr, .src.name = "SrcA"}, 
-            {TagB, .oper = EcsOr, .src.id = SrcA}
+            {TagB, .src.id = SrcA}
         }
     }));
 
     test_int(f.terms[0].oper, EcsOr);
     test_int(f.terms[0].id, TagA);
     test_int(f.terms[0].first.id, TagA);
-    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[0].src.id, SrcA);
     test_int(f.terms[0].src.flags, EcsSelf|EcsUp|EcsIsEntity);
     test_int(f.terms[0].src.trav, EcsIsA);
 
-    test_int(f.terms[1].oper, EcsOr);
+    test_int(f.terms[1].oper, EcsAnd);
     test_int(f.terms[1].id, TagB);
     test_int(f.terms[1].first.id, TagB);
-    test_int(f.terms[1].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f.terms[1].first.flags, EcsSelf|EcsIsEntity);
     test_int(f.terms[1].src.id, SrcA);
     test_int(f.terms[1].src.flags, EcsSelf|EcsUp|EcsIsEntity);
     test_int(f.terms[1].src.trav, EcsIsA);
@@ -1986,7 +1986,7 @@ void Filter_filter_w_resources_copy() {
     ecs_filter_t f_1 = ECS_FILTER_INIT;
     test_assert(NULL != ecs_filter_init(world, &(ecs_filter_desc_t){
         .storage = &f_1,
-        .terms = {{TagA, .src.name = "This"}, {TagB, .src.name = "This"}}
+        .terms = {{TagA, .src.name = "this"}, {TagB, .src.name = "this"}}
     }));
 
     test_int(f_1.term_count, 2);
@@ -2105,7 +2105,7 @@ void Filter_filter_double_init() {
     test_int(f_1.terms[0].oper, EcsAnd);
     test_int(f_1.terms[0].field_index, 0);
     test_int(f_1.terms[0].first.id, Foo);
-    test_int(f_1.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f_1.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f_1.terms[0].src.id, EcsThis);
     test_int(f_1.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f_1.terms[0].src.trav, EcsIsA);
@@ -2122,7 +2122,7 @@ void Filter_filter_double_init() {
     test_int(f_2.terms[0].oper, EcsAnd);
     test_int(f_2.terms[0].field_index, 0);
     test_int(f_2.terms[0].first.id, Foo);
-    test_int(f_2.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f_2.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f_2.terms[0].src.id, EcsThis);
     test_int(f_2.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f_2.terms[0].src.trav, EcsIsA);
@@ -2149,7 +2149,7 @@ void Filter_filter_double_init_w_expr() {
     test_int(f_1.terms[0].oper, EcsAnd);
     test_int(f_1.terms[0].field_index, 0);
     test_int(f_1.terms[0].first.id, Foo);
-    test_int(f_1.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f_1.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f_1.terms[0].src.id, EcsThis);
     test_int(f_1.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f_1.terms[0].src.trav, EcsIsA);
@@ -2166,7 +2166,7 @@ void Filter_filter_double_init_w_expr() {
     test_int(f_2.terms[0].oper, EcsAnd);
     test_int(f_2.terms[0].field_index, 0);
     test_int(f_2.terms[0].first.id, Foo);
-    test_int(f_2.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f_2.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f_2.terms[0].src.id, EcsThis);
     test_int(f_2.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f_2.terms[0].src.trav, EcsIsA);
@@ -2193,7 +2193,7 @@ void Filter_filter_double_init_w_expr_optional() {
     test_int(f_1.terms[0].oper, EcsOptional);
     test_int(f_1.terms[0].field_index, 0);
     test_int(f_1.terms[0].first.id, Foo);
-    test_int(f_1.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f_1.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f_1.terms[0].src.id, EcsThis);
     test_int(f_1.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f_1.terms[0].src.trav, EcsIsA);
@@ -2210,7 +2210,7 @@ void Filter_filter_double_init_w_expr_optional() {
     test_int(f_2.terms[0].oper, EcsOptional);
     test_int(f_2.terms[0].field_index, 0);
     test_int(f_2.terms[0].first.id, Foo);
-    test_int(f_2.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+    test_int(f_2.terms[0].first.flags, EcsSelf|EcsIsEntity);
     test_int(f_2.terms[0].src.id, EcsThis);
     test_int(f_2.terms[0].src.flags, EcsSelf|EcsUp|EcsIsVariable);
     test_int(f_2.terms[0].src.trav, EcsIsA);
@@ -2219,6 +2219,726 @@ void Filter_filter_double_init_w_expr_optional() {
     ecs_filter_fini(&f_2);
 
     ecs_fini(world);
+}
+
+void Filter_filter_w_tag_term_is_no_data() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_TAG(world, Foo);
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter_init(world, &(ecs_filter_desc_t){
+        .storage = &f,
+        .terms = {{ Foo }}
+    }));
+
+    test_assert(f.flags & EcsFilterNoData);
+
+    ecs_iter_t it = ecs_filter_iter(world, &f);
+    test_assert(it.flags & EcsIterNoData);
+    ecs_iter_fini(&it);
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world);   
+}
+
+void Filter_filter_w_inout_none_term_is_no_data() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter_init(world, &(ecs_filter_desc_t){
+        .storage = &f,
+        .terms = {{ ecs_id(Position), .inout = EcsInOutNone }}
+    }));
+
+    test_assert(f.flags & EcsFilterNoData);
+
+    ecs_iter_t it = ecs_filter_iter(world, &f);
+    test_assert(it.flags & EcsIterNoData);
+    ecs_iter_fini(&it);
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world);  
+}
+
+void Filter_filter_w_tag_and_inout_none_term_is_no_data() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+    ECS_TAG(world, Foo);
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter_init(world, &(ecs_filter_desc_t){
+        .storage = &f,
+        .terms = {
+            { ecs_id(Position), .inout = EcsInOutNone },
+            { Foo }
+        }
+    }));
+
+    test_assert(f.flags & EcsFilterNoData);
+
+    ecs_iter_t it = ecs_filter_iter(world, &f);
+    test_assert(it.flags & EcsIterNoData);
+    ecs_iter_fini(&it);
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world); 
+}
+
+void Filter_filter_w_not_term_is_no_data() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+    ECS_TAG(world, Foo);
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter_init(world, &(ecs_filter_desc_t){
+        .storage = &f,
+        .terms = {
+            { ecs_id(Position), .oper = EcsNot }
+        }
+    }));
+
+    test_assert(f.flags & EcsFilterNoData);
+
+    ecs_iter_t it = ecs_filter_iter(world, &f);
+    test_assert(it.flags & EcsIterNoData);
+    ecs_iter_fini(&it);
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world); 
+}
+
+void Filter_filter_w_no_transitive_pair() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_TAG(world, LocatedIn);
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter_init(world, &(ecs_filter_desc_t){
+        .storage = &f,
+        .terms = {
+            { .first.id = LocatedIn, .second.id = EcsWildcard }
+        }
+    }));
+
+    test_assert(!(f.terms[0].flags & EcsTermTransitive));
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world); 
+}
+
+void Filter_filter_w_transitive_pair_any_src() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_ENTITY(world, LocatedIn, Transitive);
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter_init(world, &(ecs_filter_desc_t){
+        .storage = &f,
+        .terms = {
+            {
+                .first.id = LocatedIn, 
+                .second.id = EcsWildcard,
+                .src.id = EcsAny
+            }
+        }
+    }));
+
+    test_assert(!(f.terms[0].flags & EcsTermTransitive));
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world); 
+}
+
+void Filter_filter_w_transitive_pair() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_ENTITY(world, LocatedIn, Transitive);
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter_init(world, &(ecs_filter_desc_t){
+        .storage = &f,
+        .terms = {
+            { .first.id = LocatedIn, .second.id = EcsWildcard }
+        }
+    }));
+
+    test_assert(f.terms[0].flags & EcsTermTransitive);
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world); 
+}
+
+void Filter_filter_w_transitive_tag_no_pair() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_ENTITY(world, LocatedIn, Transitive);
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter_init(world, &(ecs_filter_desc_t){
+        .storage = &f,
+        .terms = {
+            { .first.id = LocatedIn }
+        }
+    }));
+
+    test_assert(!(f.terms[0].flags & EcsTermTransitive));
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world); 
+}
+
+void Filter_filter_w_transitive_tag_self_tgt() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_ENTITY(world, LocatedIn, Transitive);
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter_init(world, &(ecs_filter_desc_t){
+        .storage = &f,
+        .terms = {
+            { .first.id = LocatedIn, .second.id = EcsWildcard, .second.flags = EcsSelf }
+        }
+    }));
+
+    test_assert(!(f.terms[0].flags & EcsTermTransitive));
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world); 
+}
+
+void Filter_filter_w_transitive_tag_any_tgt() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_ENTITY(world, LocatedIn, Transitive);
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter_init(world, &(ecs_filter_desc_t){
+        .storage = &f,
+        .terms = {
+            { .first.id = LocatedIn, .second.id = EcsAny }
+        }
+    }));
+
+    test_assert(!(f.terms[0].flags & EcsTermTransitive));
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world); 
+}
+
+void Filter_filter_w_pair_same_vars() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_TAG(world, Rel);
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter_init(world, &(ecs_filter_desc_t){
+        .storage = &f,
+        .terms = {
+            {
+                .first.id = Rel, 
+                .src.name = "a",
+                .src.flags = EcsIsVariable,
+                .second.name = "a",
+                .second.flags = EcsIsVariable,
+            }
+        }
+    }));
+
+    test_assert(f.terms[0].src.flags & EcsIsVariable);
+    test_assert(f.terms[0].second.flags & EcsIsVariable);
+    test_str(f.terms[0].src.name, "a");
+    test_str(f.terms[0].second.name, "a");
+    test_assert(f.terms[0].flags & EcsTermSrcSecondEq);
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world); 
+}
+
+void Filter_filter_w_pair_not_same_vars() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_TAG(world, Rel);
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter_init(world, &(ecs_filter_desc_t){
+        .storage = &f,
+        .terms = {
+            {
+                .first.id = Rel, 
+                .src.name = "a",
+                .src.flags = EcsIsVariable,
+                .second.name = "b",
+                .second.flags = EcsIsVariable,
+            }
+        }
+    }));
+
+    test_assert(f.terms[0].src.flags & EcsIsVariable);
+    test_assert(f.terms[0].second.flags & EcsIsVariable);
+    test_str(f.terms[0].src.name, "a");
+    test_str(f.terms[0].second.name, "b");
+    test_assert(!(f.terms[0].flags & EcsTermSrcSecondEq));
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world); 
+}
+
+void Filter_filter_w_pair_no_vars_not_same_vars() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_TAG(world, Rel);
+    ECS_TAG(world, A);
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter_init(world, &(ecs_filter_desc_t){
+        .storage = &f,
+        .terms = {
+            {
+                .first.id = Rel, 
+                .src.id = A,
+                .second.id = A
+            }
+        }
+    }));
+
+    test_assert(f.terms[0].src.flags & EcsIsEntity);
+    test_assert(f.terms[0].second.flags & EcsIsEntity);
+    test_uint(f.terms[0].src.id, A);
+    test_uint(f.terms[0].second.id, A);
+    test_assert(f.terms[0].flags & EcsTermSrcSecondEq);
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world); 
+}
+
+void Filter_filter_w_pair_wildcard_not_same_vars() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_TAG(world, Rel);
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter_init(world, &(ecs_filter_desc_t){
+        .storage = &f,
+        .terms = {
+            {
+                .first.id = Rel, 
+                .src.id = EcsWildcard,
+                .second.id = EcsWildcard
+            }
+        }
+    }));
+
+    test_assert(f.terms[0].src.flags & EcsIsVariable);
+    test_assert(f.terms[0].second.flags & EcsIsVariable);
+    test_uint(f.terms[0].src.id, EcsWildcard);
+    test_uint(f.terms[0].second.id, EcsWildcard);
+    test_assert(!(f.terms[0].flags & EcsTermSrcSecondEq));
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world); 
+}
+
+void Filter_filter_w_pair_any_not_same_vars() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_TAG(world, Rel);
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter_init(world, &(ecs_filter_desc_t){
+        .storage = &f,
+        .terms = {
+            {
+                .first.id = Rel, 
+                .src.id = EcsAny,
+                .second.id = EcsAny
+            }
+        }
+    }));
+
+    test_assert(f.terms[0].src.flags & EcsIsVariable);
+    test_assert(f.terms[0].second.flags & EcsIsVariable);
+    test_uint(f.terms[0].src.id, EcsAny);
+    test_uint(f.terms[0].second.id, EcsAny);
+    test_assert(!(f.terms[0].flags & EcsTermSrcSecondEq));
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world); 
+}
+
+void Filter_filter_w_no_pair_not_same_vars() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_TAG(world, Rel);
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter_init(world, &(ecs_filter_desc_t){
+        .storage = &f,
+        .terms = {
+            {
+                .first.id = Rel, 
+                .src.name = "a",
+                .src.flags = EcsIsVariable
+            }
+        }
+    }));
+
+    test_assert(f.terms[0].src.flags & EcsIsVariable);
+    test_assert(!(f.terms[0].second.flags & EcsIsVariable));
+    test_str(f.terms[0].src.name, "a");
+    test_assert(!(f.terms[0].flags & EcsTermSrcSecondEq));
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world); 
+}
+
+void Filter_filter_not_childof_any() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_TAG(world, Rel);
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter_init(world, &(ecs_filter_desc_t){
+        .storage = &f,
+        .terms = {
+            {
+                .first.id = EcsChildOf, 
+                .second.id = EcsAny,
+                .oper = EcsNot
+            }
+        }
+    }));
+
+    test_int(f.term_count, 1);
+    test_int(f.field_count, 1);
+    test_assert(f.terms != NULL);
+    test_int(f.terms[0].id, ecs_pair(EcsChildOf, 0));
+    test_int(f.terms[0].oper, EcsAnd);
+    test_int(f.terms[0].inout, EcsInOutDefault);
+    test_int(f.terms[0].field_index, 0);
+    test_int(f.terms[0].first.id, EcsChildOf);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsIsEntity);
+    test_int(f.terms[0].src.id, EcsThis);
+    test_int(f.terms[0].src.flags, EcsSelf|EcsIsVariable);
+    test_int(f.terms[0].second.id, 0);
+    test_int(f.terms[0].second.flags, EcsSelf|EcsIsEntity);
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world); 
+}
+
+void Filter_filter_w_inherited_id() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_TAG(world, Unit);
+    ECS_ENTITY(world, MeleeUnit, (IsA, Unit));
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter(world, {
+        .storage = &f,
+        .terms = {
+            { .first.id = Unit }
+        }
+    }));
+
+    test_assert(f.terms[0].flags & EcsTermIdInherited);
+    test_int(f.terms[0].first.trav, EcsIsA);
+    test_int(f.terms[0].first.id, Unit);
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world); 
+}
+
+void Filter_filter_w_inherited_pair() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_TAG(world, Unit);
+    ECS_ENTITY(world, MeleeUnit, (IsA, Unit));
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter(world, {
+        .storage = &f,
+        .terms = {
+            { .first.id = Unit, .second.id = EcsWildcard }
+        }
+    }));
+
+    test_assert(f.terms[0].flags & EcsTermIdInherited);
+    test_int(f.terms[0].first.trav, EcsIsA);
+    test_int(f.terms[0].first.id, Unit);
+    test_int(f.terms[0].second.id, EcsWildcard);
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world);
+}
+
+void Filter_filter_w_non_inherited_id() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_TAG(world, Unit);
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter(world, {
+        .storage = &f,
+        .terms = {
+            { .first.id = Unit }
+        }
+    }));
+
+    test_assert(!(f.terms[0].flags & EcsTermIdInherited));
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world); 
+}
+
+void Filter_filter_w_non_inherited_pair() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_TAG(world, Unit);
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter(world, {
+        .storage = &f,
+        .terms = {
+            { .first.id = Unit, .second.id = EcsWildcard }
+        }
+    }));
+
+    test_assert(!(f.terms[0].flags & EcsTermIdInherited));
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world);
+}
+
+void Filter_filter_w_first_rel() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_ENTITY(world, Rel, Traversable);
+    ECS_TAG(world, Unit);
+    ECS_ENTITY(world, MeleeUnit, (Rel, Unit));
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter(world, {
+        .storage = &f,
+        .terms = {
+            { .first.id = Unit, .first.trav = Rel }
+        }
+    }));
+
+    test_assert(f.terms[0].flags & EcsTermIdInherited);
+    test_int(f.terms[0].first.trav, Rel);
+    test_int(f.terms[0].first.id, Unit);
+    test_int(f.terms[0].first.flags, EcsDown|EcsIsEntity);
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world); 
+}
+
+void Filter_filter_w_first_rel_self() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_ENTITY(world, Rel, Traversable);
+    ECS_TAG(world, Unit);
+    ECS_ENTITY(world, MeleeUnit, (Rel, Unit));
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    ecs_log_set_level(-4);
+    test_assert(NULL == ecs_filter(world, {
+        .storage = &f,
+        .terms = {
+            { .first.id = Unit, .first.flags = EcsSelf, .first.trav = Rel }
+        }
+    }));
+
+    ecs_fini(world); 
+}
+
+void Filter_filter_w_first_rel_down() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_ENTITY(world, Rel, Traversable);
+    ECS_TAG(world, Unit);
+    ECS_ENTITY(world, MeleeUnit, (Rel, Unit));
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter(world, {
+        .storage = &f,
+        .terms = {
+            { .first.id = Unit, .first.flags = EcsDown, .first.trav = Rel }
+        }
+    }));
+
+    test_assert(f.terms[0].flags & EcsTermIdInherited);
+    test_int(f.terms[0].first.trav, Rel);
+    test_int(f.terms[0].first.id, Unit);
+    test_int(f.terms[0].first.flags, EcsDown|EcsIsEntity);
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world);
+}
+
+void Filter_filter_w_first_rel_self_down() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_ENTITY(world, Rel, Traversable);
+    ECS_TAG(world, Unit);
+    ECS_ENTITY(world, MeleeUnit, (Rel, Unit));
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter(world, {
+        .storage = &f,
+        .terms = {
+            { .first.id = Unit, .first.flags = EcsSelf|EcsDown, .first.trav = Rel }
+        }
+    }));
+
+    test_assert(f.terms[0].flags & EcsTermIdInherited);
+    test_int(f.terms[0].first.trav, Rel);
+    test_int(f.terms[0].first.id, Unit);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world);
+}
+
+void Filter_filter_w_first_rel_reflexive() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_ENTITY(world, Rel, Traversable, Reflexive);
+    ECS_TAG(world, Unit);
+    ECS_ENTITY(world, MeleeUnit, (Rel, Unit));
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter(world, {
+        .storage = &f,
+        .terms = {
+            { .first.id = Unit, .first.trav = Rel }
+        }
+    }));
+
+    test_assert(f.terms[0].flags & EcsTermIdInherited);
+    test_int(f.terms[0].first.trav, Rel);
+    test_int(f.terms[0].first.id, Unit);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world); 
+}
+
+void Filter_filter_w_first_rel_reflexive_self() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_ENTITY(world, Rel, Traversable, Reflexive);
+    ECS_TAG(world, Unit);
+    ECS_ENTITY(world, MeleeUnit, (Rel, Unit));
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    ecs_log_set_level(-4);
+    test_assert(NULL == ecs_filter(world, {
+        .storage = &f,
+        .terms = {
+            { .first.id = Unit, .first.flags = EcsSelf, .first.trav = Rel }
+        }
+    }));
+
+    ecs_fini(world); 
+}
+
+void Filter_filter_w_first_rel_reflexive_down() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_ENTITY(world, Rel, Traversable, Reflexive);
+    ECS_TAG(world, Unit);
+    ECS_ENTITY(world, MeleeUnit, (Rel, Unit));
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter(world, {
+        .storage = &f,
+        .terms = {
+            { .first.id = Unit, .first.flags = EcsDown, .first.trav = Rel }
+        }
+    }));
+
+    test_assert(f.terms[0].flags & EcsTermIdInherited);
+    test_int(f.terms[0].first.trav, Rel);
+    test_int(f.terms[0].first.id, Unit);
+    test_int(f.terms[0].first.flags, EcsDown|EcsIsEntity);
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world); 
+}
+
+void Filter_filter_w_first_rel_reflexive_self_down() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_ENTITY(world, Rel, Traversable, Reflexive);
+    ECS_TAG(world, Unit);
+    ECS_ENTITY(world, MeleeUnit, (Rel, Unit));
+
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL != ecs_filter(world, {
+        .storage = &f,
+        .terms = {
+            { .first.id = Unit, .first.flags = EcsSelf|EcsDown, .first.trav = Rel }
+        }
+    }));
+
+    test_assert(f.terms[0].flags & EcsTermIdInherited);
+    test_int(f.terms[0].first.trav, Rel);
+    test_int(f.terms[0].first.id, Unit);
+    test_int(f.terms[0].first.flags, EcsSelf|EcsDown|EcsIsEntity);
+
+    ecs_filter_fini(&f);
+
+    ecs_fini(world); 
+}
+
+void Filter_filter_w_first_rel_non_traversable() {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_TAG(world, Rel);
+    ECS_TAG(world, Unit);
+
+    ecs_log_set_level(-4);
+    ecs_filter_t f = ECS_FILTER_INIT;
+    test_assert(NULL == ecs_filter(world, {
+        .storage = &f,
+        .terms = {
+            { .first.id = Unit, .first.trav = Rel }
+        }
+    }));
+
+    ecs_fini(world); 
 }
 
 void Filter_filter_w_not_flag() {
@@ -5323,8 +6043,9 @@ void Filter_filter_iter_pair_w_3_wildcards_2x2x2_matches() {
 
     test_bool(ecs_filter_next(&it), true);
     result = ecs_iter_str(&it); expect =
-    HEAD "term: (X,A),(Y,A),(Z,A)"
-    LINE "subj: 0,0,0"
+    HEAD "id:  (X,A),(Y,A),(Z,A)"
+    LINE "src: 0,0,0"
+    LINE "set: true,true,true"
     LINE "this:"
     LINE "    - E"
     LINE;
@@ -5333,8 +6054,9 @@ void Filter_filter_iter_pair_w_3_wildcards_2x2x2_matches() {
 
     test_bool(ecs_filter_next(&it), true);
     result = ecs_iter_str(&it); expect =
-    HEAD "term: (X,A),(Y,A),(Z,B)"
-    LINE "subj: 0,0,0"
+    HEAD "id:  (X,A),(Y,A),(Z,B)"
+    LINE "src: 0,0,0"
+    LINE "set: true,true,true"
     LINE "this:"
     LINE "    - E"
     LINE;
@@ -5343,8 +6065,9 @@ void Filter_filter_iter_pair_w_3_wildcards_2x2x2_matches() {
 
     test_bool(ecs_filter_next(&it), true);
     result = ecs_iter_str(&it); expect =
-    HEAD "term: (X,A),(Y,B),(Z,A)"
-    LINE "subj: 0,0,0"
+    HEAD "id:  (X,A),(Y,B),(Z,A)"
+    LINE "src: 0,0,0"
+    LINE "set: true,true,true"
     LINE "this:"
     LINE "    - E"
     LINE;
@@ -5353,8 +6076,9 @@ void Filter_filter_iter_pair_w_3_wildcards_2x2x2_matches() {
 
     test_bool(ecs_filter_next(&it), true);
     result = ecs_iter_str(&it); expect =
-    HEAD "term: (X,A),(Y,B),(Z,B)"
-    LINE "subj: 0,0,0"
+    HEAD "id:  (X,A),(Y,B),(Z,B)"
+    LINE "src: 0,0,0"
+    LINE "set: true,true,true"
     LINE "this:"
     LINE "    - E"
     LINE;
@@ -5363,8 +6087,9 @@ void Filter_filter_iter_pair_w_3_wildcards_2x2x2_matches() {
 
     test_bool(ecs_filter_next(&it), true);
     result = ecs_iter_str(&it); expect =
-    HEAD "term: (X,B),(Y,A),(Z,A)"
-    LINE "subj: 0,0,0"
+    HEAD "id:  (X,B),(Y,A),(Z,A)"
+    LINE "src: 0,0,0"
+    LINE "set: true,true,true"
     LINE "this:"
     LINE "    - E"
     LINE;
@@ -5373,8 +6098,9 @@ void Filter_filter_iter_pair_w_3_wildcards_2x2x2_matches() {
 
     test_bool(ecs_filter_next(&it), true);
     result = ecs_iter_str(&it); expect =
-    HEAD "term: (X,B),(Y,A),(Z,B)"
-    LINE "subj: 0,0,0"
+    HEAD "id:  (X,B),(Y,A),(Z,B)"
+    LINE "src: 0,0,0"
+    LINE "set: true,true,true"
     LINE "this:"
     LINE "    - E"
     LINE;
@@ -5383,8 +6109,9 @@ void Filter_filter_iter_pair_w_3_wildcards_2x2x2_matches() {
 
     test_bool(ecs_filter_next(&it), true);
     result = ecs_iter_str(&it); expect =
-    HEAD "term: (X,B),(Y,B),(Z,A)"
-    LINE "subj: 0,0,0"
+    HEAD "id:  (X,B),(Y,B),(Z,A)"
+    LINE "src: 0,0,0"
+    LINE "set: true,true,true"
     LINE "this:"
     LINE "    - E"
     LINE;
@@ -5393,8 +6120,9 @@ void Filter_filter_iter_pair_w_3_wildcards_2x2x2_matches() {
 
     test_bool(ecs_filter_next(&it), true);
     result = ecs_iter_str(&it); expect =
-    HEAD "term: (X,B),(Y,B),(Z,B)"
-    LINE "subj: 0,0,0"
+    HEAD "id:  (X,B),(Y,B),(Z,B)"
+    LINE "src: 0,0,0"
+    LINE "set: true,true,true"
     LINE "this:"
     LINE "    - E"
     LINE;
@@ -7393,7 +8121,7 @@ void Filter_chain_iter_w_or() {
     ecs_filter_t f_2 = ECS_FILTER_INIT;
     test_assert(NULL != ecs_filter_init(world, &(ecs_filter_desc_t){
         .storage = &f_2,
-        .terms = {{ TagB, .oper = EcsOr }, { TagC, .oper = EcsOr }}
+        .terms = {{ TagB, .oper = EcsOr }, { TagC }}
     }));
 
     ecs_iter_t child_it = ecs_filter_iter(world, &f_1);
@@ -7747,8 +8475,9 @@ void Filter_term_iter_w_filter_term() {
     test_assert(it.sizes != NULL);
     test_int(it.sizes[0], ECS_SIZEOF(Position));
 
-    test_assert(it.ptrs == NULL);
+    test_assert(it.ptrs != NULL);
     test_assert(it.columns != NULL);
+    test_assert(it.ptrs[0] == NULL);
 
     test_bool(ecs_term_next(&it), false);
 
@@ -7782,8 +8511,9 @@ void Filter_filter_iter_w_filter_term() {
     test_assert(it.sizes != NULL);
     test_int(it.sizes[0], ECS_SIZEOF(Position));
 
-    test_assert(it.ptrs == NULL);
+    test_assert(it.ptrs != NULL);
     test_assert(it.columns != NULL);
+    test_assert(it.ptrs[0] == NULL);
 
     test_bool(ecs_filter_next(&it), false);
 
@@ -7925,8 +8655,9 @@ void Filter_filter_iter_2_terms_filter_all() {
     test_int(it.sizes[0], ECS_SIZEOF(Position));
     test_int(it.sizes[1], ECS_SIZEOF(Velocity));
 
-    test_assert(it.ptrs == NULL);
+    test_assert(it.ptrs != NULL);
     test_assert(it.columns != NULL);
+    test_assert(it.ptrs[0] == NULL);
 
     test_bool(ecs_filter_next(&it), false);
 
@@ -7969,8 +8700,9 @@ void Filter_filter_iter_2_terms_filter_all_w_out() {
     test_int(it.sizes[0], ECS_SIZEOF(Position));
     test_int(it.sizes[1], ECS_SIZEOF(Velocity));
 
-    test_assert(it.ptrs == NULL);
+    test_assert(it.ptrs != NULL);
     test_assert(it.columns != NULL);
+    test_assert(it.ptrs[0] == NULL);
 
     test_bool(ecs_filter_next(&it), false);
 
